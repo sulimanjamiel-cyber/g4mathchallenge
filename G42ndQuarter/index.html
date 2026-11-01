@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="ألعاب رياضيات المستوى الرابع">
+<meta property="og:description" content="10 ألعاب تفاعلية للضرب والقسمة – الوحدتان 4 و5، الفصل الدراسي الأول (الجزء B)">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<title>ألعاب رياضيات المستوى الرابع</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ألعاب تفاعلية لدروس الضرب والقسمة – الوحدتان 4 و5، المستوى الرابع، الفصل الدراسي الأول">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* Layout: graph-paper classroom board; lesson cards in two unit bands; each game sits on a white "worksheet" card */
+:root{
+  --paper:#F2F7EF; --rule:#DCE9D6; --card:#FFFFFF; --ink:#1B2A4E; --ink2:#55627F;
+  --green:#3BA935; --green-d:#23801F; --maroon:#8A1538; --maroon-l:#F6E3EA;
+  --sun:#FFC53D; --sky:#2B95E3; --sky-l:#E1F1FC; --bad:#D9363E; --good:#23801F;
+  --pink:#F7AFC3; --lilac:#BFA2E0; --aqua:#A9DDF6; --lime:#C6E68F;
+  --shadow:0 3px 0 rgba(27,42,78,.12), 0 10px 24px -12px rgba(27,42,78,.25);
+  --display:"Lalezar","Tajawal",system-ui,sans-serif;
+  --body:"Tajawal",system-ui,sans-serif;
+  --num:"Fredoka","Tajawal",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);
+  background-size:28px 28px;}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,.fld:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.m,.num{font-family:var(--num);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+#app{max-width:1040px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- HOME ---------- */
+.hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:var(--green);color:#fff;border-radius:22px;padding:24px 26px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -40px -60px auto;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.10)}
+.eyebrow{font-weight:700;letter-spacing:.02em;opacity:.9;font-size:15px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,7vw,64px);line-height:1.05;margin:6px 0 8px;text-wrap:balance}
+.hero p{margin:0;max-width:52ch;font-size:17px}
+.hero .ops{font-family:var(--num);font-size:clamp(34px,6vw,58px);font-weight:700;display:grid;grid-template-columns:repeat(2,1fr);gap:6px;direction:ltr}
+.hero .ops span{width:1.5em;height:1.5em;display:grid;place-items:center;border-radius:16px;background:rgba(255,255,255,.16)}
+.hero .ops span:nth-child(2){background:var(--sun);color:var(--ink)}
+.hero .ops span:nth-child(3){background:var(--maroon)}
+.unit{margin-top:28px}
+.unit-h{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin:0 4px 12px}
+.unit-h .tag{font-family:var(--display);font-size:26px;color:var(--u)}
+.unit-h .t{font-weight:700;color:var(--ink2);font-size:17px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.lcard{text-align:start;background:var(--card);border:2px solid transparent;border-radius:18px;padding:16px 16px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;transition:transform .15s,border-color .15s;min-width:0}
+.lcard:hover{transform:translateY(-3px);border-color:var(--u)}
+.lcard .top{display:flex;justify-content:space-between;align-items:center}
+.lbadge{background:var(--u);color:#fff;border-radius:10px;padding:2px 10px;font-weight:800;font-size:15px}
+.lbadge .num{font-weight:600}
+.licon{font-size:34px;line-height:1}
+.ltitle{font-weight:800;font-size:17px;line-height:1.4;min-height:2.8em}
+.lgame{display:flex;justify-content:space-between;align-items:center;border-top:2px dashed var(--rule);padding-top:8px;color:var(--ink2);font-weight:700;font-size:15px}
+.stars{color:var(--sun);letter-spacing:2px;font-size:18px;white-space:nowrap}
+.stars .off{color:#D9DEE8}
+.credit{margin-top:32px;text-align:center;font-weight:700;color:var(--ink2);display:flex;flex-direction:column;gap:2px;align-items:center}
+.credit .name{font-family:var(--display);font-weight:400;font-size:26px;color:var(--maroon)}
+.credit .num{font-size:18px}
+
+/* ---------- GAME SHELL ---------- */
+.gtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.back{background:var(--card);border:0;border-radius:14px;padding:8px 14px;font-weight:800;box-shadow:var(--shadow)}
+.gtitle{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.gtitle .gn{font-family:var(--display);font-size:28px;color:var(--u)}
+.gtitle .lt{font-weight:700;color:var(--ink2);font-size:15px}
+.mute{background:var(--card);border:0;border-radius:14px;width:44px;height:44px;box-shadow:var(--shadow);font-size:20px}
+.prog{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.prog i{flex:1;min-width:16px;height:10px;border-radius:6px;background:#D7E0E8}
+.prog i.done{background:var(--green)}
+.prog i.part{background:var(--sun)}
+.prog i.cur{background:var(--sky)}
+#stage{background:var(--card);border-radius:22px;box-shadow:var(--shadow);padding:20px;min-height:420px;position:relative;overflow:hidden}
+.task{font-size:20px;font-weight:700;line-height:1.6;margin-bottom:14px;text-wrap:balance}
+.task .m{color:var(--maroon);font-size:1.15em}
+.sub{color:var(--ink2);font-weight:700;margin:6px 0}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.col{flex:1 1 280px;min-width:0}
+.btn{background:var(--green);color:#fff;border:0;border-radius:14px;padding:10px 20px;font-weight:800;font-size:18px;box-shadow:0 4px 0 var(--green-d)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--green-d)}
+.btn.alt{background:var(--sun);color:var(--ink);box-shadow:0 4px 0 #D49A12}
+.btn.ghost{background:var(--sky-l);color:var(--ink);box-shadow:0 4px 0 #B9D9F1}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.hint{margin-top:10px;background:var(--sky-l);border-radius:14px;padding:10px 14px;font-weight:700}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@keyframes popin{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* fields + keypad */
+.fld{display:inline-flex;align-items:center;justify-content:center;min-width:64px;height:48px;padding:0 10px;border-radius:12px;border:3px solid #C9D4E2;background:#FAFCFF;font-family:var(--num);font-weight:700;font-size:26px;direction:ltr;cursor:pointer;vertical-align:middle;color:var(--ink)}
+.fld .ph{color:#B6C2D3}
+.fld .sf{color:#9AA7BA}
+.fld.on{border-color:var(--sky);background:#fff;box-shadow:0 0 0 4px rgba(43,149,227,.18)}
+.fld.good{border-color:var(--green);background:#EEF9EC;color:var(--green-d)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:300px;margin:14px auto 0;direction:ltr}
+.pad button{height:54px;border-radius:14px;border:0;background:#EEF2F7;font-family:var(--num);font-weight:700;font-size:26px;box-shadow:0 3px 0 #CBD5E1}
+.pad button:active{transform:translateY(2px);box-shadow:0 1px 0 #CBD5E1}
+.pad .ok{background:var(--green);color:#fff;box-shadow:0 3px 0 var(--green-d);font-family:var(--body);font-size:20px}
+.pad .del{background:var(--maroon-l);color:var(--maroon)}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,140%);background:var(--ink);color:#fff;padding:12px 22px;border-radius:16px;font-weight:800;font-size:19px;transition:transform .25s;z-index:50;box-shadow:var(--shadow);max-width:calc(100% - 32px);text-align:center}
+#toast.show{transform:translate(-50%,0)}
+#toast.good{background:var(--green-d)}
+#toast.bad{background:var(--bad)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40}
+
+/* end screen */
+.end{text-align:center;padding:26px 10px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.end .big{font-family:var(--display);font-size:46px;color:var(--green-d);line-height:1.1}
+.end .stars{font-size:54px;letter-spacing:8px}
+.end .bt{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+
+/* ---------- G1 balloons ---------- */
+.qcard{font-family:var(--num);font-weight:700;font-size:clamp(34px,7vw,52px);text-align:center;direction:ltr;background:var(--sky-l);border-radius:18px;padding:10px;margin-bottom:6px}
+.qm{color:var(--maroon);unicode-bidi:isolate}
+.sky{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;height:270px;align-items:center;justify-items:center;background:linear-gradient(#EAF6FF,#fff);border-radius:18px;margin-top:8px}
+.balloon{--c:var(--pink);width:min(96px,21vw);aspect-ratio:4/5;border:0;border-radius:50% 50% 47% 47%/56% 56% 44% 44%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.75) 0 9%,transparent 10%),var(--c);position:relative;font-family:var(--num);font-weight:700;font-size:clamp(17px,4vw,24px);color:var(--ink);animation:bob 2.6s ease-in-out infinite;direction:ltr}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:60px;background:#9AA7BA;transform:translateX(-50%)}
+.balloon::before{content:"";position:absolute;left:50%;top:97%;border:7px solid transparent;border-bottom-color:var(--c);transform:translateX(-50%) rotate(180deg)}
+.balloon.popped{animation:pop .35s forwards}
+.balloon.dim{filter:grayscale(1);opacity:.35;pointer-events:none}
+@keyframes bob{50%{transform:translateY(-14px)}}
+@keyframes pop{to{transform:scale(1.6);opacity:0}}
+
+/* ---------- G2 grid ---------- */
+.gridbox{display:inline-flex;flex-direction:column;align-items:flex-start;direction:ltr;margin:4px auto}
+.collabs{display:flex;height:26px;margin-left:34px;font-family:var(--num);font-weight:700;color:var(--maroon)}
+.collabs span,.rowlabs span{display:flex;align-items:center;justify-content:center}
+.rowwrap{display:flex}
+.rowlabs{display:flex;flex-direction:column;width:34px;font-family:var(--num);font-weight:700;color:var(--maroon)}
+.grid{position:relative;border:2px solid #7D8CA6;cursor:crosshair;background-color:#fff;touch-action:manipulation}
+.vl,.hl{position:absolute;background:var(--maroon);display:none;pointer-events:none}
+.vl{top:-6px;bottom:-6px;width:4px;margin-left:-2px}
+.hl{left:-6px;right:-6px;height:4px;margin-top:-2px}
+.reg{position:absolute;display:flex;align-items:center;justify-content:center;font-family:var(--num);font-weight:700;font-size:13px;color:var(--ink);opacity:.85;pointer-events:none;overflow:hidden;text-align:center}
+.pp{display:flex;align-items:center;gap:8px;margin:6px 0;flex-wrap:wrap;direction:ltr;justify-content:flex-end}
+.pp .chip{width:18px;height:18px;border-radius:5px;flex:none}
+.pp .m{font-size:22px;font-weight:700}
+.vsum{display:inline-grid;direction:ltr;font-family:var(--num);font-weight:700;font-size:26px;text-align:right;gap:0;margin:6px 0}
+.vsum .ln{border-top:3px solid var(--ink);margin:4px 0}
+
+/* ---------- G3 distributive ---------- */
+.dist{direction:ltr;display:flex;flex-direction:column;gap:12px}
+.dl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-family:var(--num);font-weight:700;font-size:24px;row-gap:8px}
+.dl[hidden]{display:none}
+.slot{width:56px;height:46px;border-radius:12px;border:3px dashed #B8C4D6;background:#F8FAFD;display:inline-grid;place-items:center;font-family:var(--num);font-weight:700;font-size:22px;color:var(--ink)}
+.slot.sel{border-style:solid;border-color:var(--sky);box-shadow:0 0 0 4px rgba(43,149,227,.18)}
+.slot.f{border-style:solid;border-color:#9AA7BA;background:#fff}
+.slot.ok{border-color:var(--green);background:#EEF9EC;color:var(--green-d)}
+.tiles{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0 4px;direction:ltr}
+.tile{min-width:64px;height:56px;border-radius:14px;border:0;background:var(--sun);font-family:var(--num);font-weight:700;font-size:26px;box-shadow:0 4px 0 #D49A12}
+.tile:active{transform:translateY(2px)}
+.opts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;direction:ltr;margin-top:8px}
+.opt{min-width:96px;padding:10px 16px;border-radius:14px;border:3px solid #C9D4E2;background:#fff;font-family:var(--num);font-weight:700;font-size:24px}
+.opt:hover{border-color:var(--sky)}
+.opt.no{opacity:.35;pointer-events:none}
+.opt.yes{border-color:var(--green);background:#EEF9EC}
+.am{display:inline-grid;direction:ltr;font-family:var(--num);font-weight:700;margin:6px auto}
+.am .cell{display:grid;place-items:center;font-size:15px;border:2px solid #fff}
+
+/* ---------- G4 memory ---------- */
+.mwrap{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:16px;align-items:start}
+.mboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;perspective:800px}
+.mcard{aspect-ratio:5/4;border:0;padding:0;background:transparent}
+.mcard .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.mcard.open .in,.mcard.got .in{transform:rotateY(180deg)}
+.mcard .bk,.mcard .fr{position:absolute;inset:0;border-radius:14px;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mcard .bk{background:var(--sky);color:#fff;font-family:var(--display);font-size:34px;background-image:radial-gradient(rgba(255,255,255,.2) 2px,transparent 3px);background-size:14px 14px;box-shadow:0 4px 0 #1C6FB0}
+.mcard .fr{background:#fff;border:3px solid #C9D4E2;transform:rotateY(180deg);font-family:var(--num);font-weight:700;font-size:clamp(17px,3.4vw,25px);direction:ltr}
+.mcard .fr.pr{background:#FFF7E0;border-color:var(--sun)}
+.mcard.got .fr{border-color:var(--green);background:#EEF9EC}
+.wsheet{background:var(--sky-l);border-radius:16px;padding:12px 14px;min-height:170px}
+.wsheet h4{margin:0 0 6px;font-size:16px}
+.vmul{display:inline-grid;direction:ltr;font-family:var(--num);font-weight:700;font-size:28px;text-align:right;margin:4px 0 6px}
+.vmul .ln{border-top:3px solid var(--ink);margin:2px 0}
+
+/* ---------- G5 factory / G10 long division (digit grids) ---------- */
+.dg{display:inline-grid;direction:ltr;font-family:var(--num);font-weight:700;font-size:30px;gap:0;margin:4px auto}
+.dg .c{width:44px;height:48px;display:grid;place-items:center;position:relative}
+.dg .bx{width:38px;height:42px;border-radius:9px;border:3px solid #C9D4E2;background:#FAFCFF;display:grid;place-items:center}
+.dg .bx.on{border-color:var(--sky);box-shadow:0 0 0 4px rgba(43,149,227,.18);background:#fff}
+.dg .bx.fx{color:#8D99AE;background:#EEF2F7}
+.dg .ln{border-top:3px solid var(--ink)}
+.dg .hlt{background:var(--sun);border-radius:10px}
+.dg .ok{color:var(--green-d)}
+.dg .brk{border-top:3px solid var(--ink)}
+.dg .brkl{border-left:3px solid var(--ink);border-top:3px solid var(--ink);border-top-left-radius:14px}
+.dg .new{color:var(--sky);animation:popin .4s}
+.dg .rem{color:var(--maroon);font-size:24px}
+.stepbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:800;font-size:18px;background:#FFF7E0;border-radius:14px;padding:8px 14px;margin-bottom:10px}
+.stepbar .m{color:var(--maroon)}
+
+/* ---------- G6 train ---------- */
+.track{position:relative;padding:20px 0 30px;direction:ltr;width:max-content;min-width:100%}
+.track::after{content:"";position:absolute;left:0;right:0;bottom:16px;height:8px;background:repeating-linear-gradient(90deg,#7D5A3C 0 14px,transparent 14px 26px),linear-gradient(#9AA7BA,#9AA7BA);background-size:auto,100% 3px;background-repeat:repeat,no-repeat;background-position:0 0,0 0}
+.train{display:flex;align-items:flex-end;gap:6px;transition:transform .9s cubic-bezier(.4,.1,.3,1);flex-wrap:nowrap;width:max-content}
+.train.go{transform:translateX(120%)!important}
+.engine{width:86px;height:92px;position:relative;flex:none}
+.engine .cab{position:absolute;right:0;bottom:12px;width:40px;height:62px;background:var(--maroon);border-radius:8px 8px 0 0}
+.engine .boil{position:absolute;left:0;bottom:12px;width:56px;height:40px;background:var(--maroon);border-radius:18px 4px 0 18px}
+.engine .chim{position:absolute;left:10px;bottom:50px;width:14px;height:22px;background:var(--ink)}
+.engine .win{position:absolute;right:9px;bottom:44px;width:22px;height:18px;background:var(--sky-l);border-radius:4px}
+.wheel{position:absolute;bottom:0;width:22px;height:22px;border-radius:50%;background:var(--ink);border:4px solid #9AA7BA}
+.wagon{flex:none;min-width:150px;height:92px;position:relative}
+.wagon .body{position:absolute;inset:0 0 12px 0;border-radius:12px;background:#E9EEF5;border:3px solid #C9D4E2;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;font-family:var(--num);font-weight:700;font-size:20px;white-space:nowrap}
+.wagon.act .body{border-color:var(--sky);background:#fff}
+.wagon.ok .body{background:#EEF9EC;border-color:var(--green)}
+.wagon .fld{min-width:58px;height:42px;font-size:22px}
+.trainwrap{overflow-x:auto;overflow-y:hidden;padding-bottom:4px}
+@media (max-width:720px){.wagon{min-width:118px}.wagon .body{font-size:17px;padding:0 5px}.wagon .fld{min-width:50px;font-size:19px}.engine{transform:scale(.85);transform-origin:bottom left}}
+
+/* ---------- G7 darts ---------- */
+.range{display:flex;justify-content:space-around;gap:10px;flex-wrap:wrap;margin:14px 0;position:relative;direction:ltr}
+.tgt{width:118px;height:118px;border-radius:50%;border:0;display:grid;place-items:center;position:relative;font-family:var(--num);font-weight:700;font-size:24px;color:var(--ink);
+  background:radial-gradient(circle,#fff 0 30%,var(--maroon) 30% 38%,#fff 38% 52%,var(--maroon) 52% 60%,#fff 60% 74%,var(--maroon) 74% 100%);box-shadow:var(--shadow)}
+.tgt span{background:#fff;border-radius:10px;padding:0 6px;position:relative;z-index:1}
+.tgt.no{opacity:.35;pointer-events:none;filter:grayscale(1)}
+.dart{position:absolute;width:34px;height:34px;z-index:5;transition:transform .45s cubic-bezier(.3,.6,.4,1);pointer-events:none;font-size:30px;line-height:1}
+.est{font-family:var(--num);font-weight:700;font-size:28px;direction:ltr;text-align:center;margin:8px 0;color:var(--green-d)}
+
+/* ---------- G8 remainder ---------- */
+.story{background:#FFF7E0;border-radius:16px;padding:12px 16px;font-size:19px;font-weight:700;line-height:1.7}
+.story .q{display:block;color:var(--maroon);margin-top:6px}
+.pic{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;direction:ltr;align-items:flex-start}
+.box{border:3px solid var(--sky);border-radius:12px;padding:4px;display:flex;flex-wrap:wrap;gap:1px;max-width:96px;background:#F3FAFF;font-size:16px;line-height:1.1}
+.left{border:3px dashed var(--maroon);border-radius:12px;padding:4px;display:flex;flex-wrap:wrap;gap:1px;font-size:16px;background:var(--maroon-l)}
+.eq{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--num);font-weight:700;font-size:28px;direction:ltr;justify-content:center;margin:10px 0}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.ch{border:3px solid #C9D4E2;background:#fff;border-radius:16px;padding:12px 8px;font-weight:800;font-size:17px;display:flex;flex-direction:column;align-items:center;gap:6px;line-height:1.35}
+.ch b{font-size:30px}
+.ch:hover{border-color:var(--sky)}
+.ch.no{opacity:.35;pointer-events:none}
+.ch.yes{border-color:var(--green);background:#EEF9EC}
+
+/* ---------- G9 sharing ---------- */
+.pool{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;direction:ltr}
+.pcol{border:3px solid #C9D4E2;border-radius:16px;padding:8px;display:flex;flex-direction:column;gap:6px;align-items:center;min-height:150px;background:#FAFCFF;min-width:0}
+.pcol h5{margin:0;font-size:16px;font-family:var(--body);direction:rtl}
+.pcol .cnt{font-family:var(--num);font-weight:700;font-size:22px;color:var(--maroon)}
+.blocks{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;min-height:40px;align-items:flex-end}
+.hund{width:30px;height:30px;background:var(--green);border:1px solid var(--green-d);background-image:linear-gradient(rgba(255,255,255,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.45) 1px,transparent 1px);background-size:3px 3px}
+.ten{width:7px;height:30px;background:var(--green);border:1px solid var(--green-d);background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px);background-size:3px 3px}
+.one{width:9px;height:9px;border-radius:50%;border:2px solid var(--green-d);background:#fff}
+.pbtns{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;direction:rtl}
+.sbtn{border:0;border-radius:12px;padding:6px 12px;font-weight:800;font-size:15px;background:var(--green);color:#fff;box-shadow:0 3px 0 var(--green-d)}
+.sbtn.brk{background:var(--sun);color:var(--ink);box-shadow:0 3px 0 #D49A12}
+.sbtn[disabled]{opacity:.4;pointer-events:none}
+.groups{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;direction:ltr}
+.grp{border:3px solid #9AA7BA;border-radius:50%/40%;min-width:96px;min-height:110px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#fff}
+.grp .blocks{max-width:110px}
+.grp .gl{font-family:var(--num);font-weight:700;color:var(--ink2);font-size:14px}
+.fly{animation:popin .35s}
+
+@media (max-width:720px){
+  .mwrap{grid-template-columns:1fr}
+  .mboard{grid-template-columns:repeat(3,1fr)}
+  .choices{grid-template-columns:1fr}
+  .tgt{width:96px;height:96px;font-size:20px}
+  #stage{padding:14px}
+  .hero{grid-template-columns:1fr}
+  .hero .ops{display:none}
+  .dg .c{width:38px;height:44px}.dg .bx{width:33px;height:38px}.dg{font-size:26px}
+  .slot{width:48px;height:42px;font-size:20px}.dl{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+
+<script>
+(()=>{
+"use strict";
+/* ================= helpers ================= */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=(a,k)=>shuffle(a).slice(0,k);
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const tens=n=>Math.floor(n/10)*10;
+const strip=n=>{while(n>=10&&n%10===0)n/=10;return n;};
+const uniq=a=>[...new Set(a)];
+const m=s=>`<span class="m">${s}</span>`;
+
+/* ================= sound ================= */
+let AC=null,muted=false;
+function tone(fs,dur=.13,type="sine",gap=.09,vol=.22){
+  if(muted)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime+.01;
+    fs.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+      const s=t0+i*gap;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(vol,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+dur);
+      o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+dur+.05);});}catch(e){}
+}
+const SFX={ok:()=>tone([660,880,1100],.14),step:()=>tone([780,1040],.1,"sine",.07,.16),bad:()=>tone([300,220],.2,"triangle",.13,.25),
+  win:()=>tone([523,659,784,1047,1319],.2,"triangle",.11),tap:()=>tone([520],.05,"sine",.05,.08),pop:()=>tone([950,1300],.07,"sine",.04)};
+
+/* ================= toast + confetti ================= */
+let tT=null;
+function toast(t,k=""){const el=$("#toast");el.className="show "+k;el.innerHTML=String(t).replace(/\d[\d\u00A0]*(?:\s*(?:[×÷+\-−=≈]|R)\s*[\d\u00A0]*\d)*(?:\s*R\s*\d+)?/g,x=>`<span class="m">${x}</span>`);clearTimeout(tT);tT=setTimeout(()=>el.className=k,1700);}
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const cv=$("#fx"),cx=cv.getContext("2d");let parts=[],raf=null;
+function burst(n=60){
+  if(RM)return;cv.width=innerWidth;cv.height=innerHeight;
+  const cols=["#3BA935","#FFC53D","#2B95E3","#8A1538","#F7AFC3","#BFA2E0"];
+  for(let i=0;i<n;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*12-4,s:6+Math.random()*7,c:rnd(cols),r:Math.random()*6,vr:(Math.random()-.5)*.4,life:90+Math.random()*40});
+  if(!raf)loop();
+}
+function loop(){cx.clearRect(0,0,cv.width,cv.height);parts=parts.filter(p=>p.life-->0);
+  parts.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);cx.restore();});
+  raf=parts.length?requestAnimationFrame(loop):(cx.clearRect(0,0,cv.width,cv.height),null);}
+function shake(el){if(!el)return;el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");}
+
+/* ================= keypad / fields ================= */
+const Pad={fields:[],active:null,
+  reset(){this.fields=[];this.active=null;},
+  field(el,o={}){const f={el,val:"",max:o.max||6,suffix:o.suffix||"",onEnter:o.onEnter,render:o.render,locked:false};
+    if(el){el.classList.add("fld");el.tabIndex=0;el.addEventListener("click",()=>{if(!f.locked)this.focus(f);});}
+    this.fields.push(f);this.draw(f);return f;},
+  focus(f){if(this.active&&this.active.el)this.active.el.classList.remove("on");this.active=f;if(f&&f.el)f.el.classList.add("on");if(f&&f.render)f.render(f);},
+  draw(f){if(f.render){f.render(f);return;}if(!f.el)return;
+    f.el.innerHTML=(f.val?`<span>${fmt(f.val)}</span>`:(f.suffix?"":`<span class="ph">?</span>`))+(f.suffix?`<span class="sf">${f.suffix}</span>`:"");},
+  key(k){const f=this.active;if(!f||f.locked)return;
+    if(k==="del")f.val=f.val.slice(0,-1);
+    else if(k==="ok"){if(f.val!==""&&f.onEnter)f.onEnter(f);return;}
+    else if(f.val.length<f.max){f.val=(f.val==="0"?"":f.val)+k;SFX.tap();}
+    this.draw(f);},
+  value(f){return parseInt(f.val+(f.suffix||""),10);},
+  good(f){f.locked=true;if(f.el){f.el.classList.remove("on");f.el.classList.add("good");}if(this.active===f)this.active=null;this.draw(f);},
+  wrong(f){f.val="";this.draw(f);shake(f.el);},
+  next(){const n=this.fields.find(x=>!x.locked);this.focus(n||null);return n;}
+};
+const padHTML=()=>`<div class="pad">${[7,8,9,4,5,6,1,2,3].map(d=>`<button data-k="${d}">${d}</button>`).join("")}<button class="del" data-k="del" aria-label="مسح">⌫</button><button data-k="0">0</button><button class="ok" data-k="ok">تحقّق</button></div>`;
+document.addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(b)Pad.key(b.dataset.k);});
+document.addEventListener("keydown",e=>{if(!RUN)return;if(/^[0-9]$/.test(e.key))Pad.key(e.key);else if(e.key==="Backspace")Pad.key("del");else if(e.key==="Enter"){e.preventDefault();Pad.key("ok");}});
+
+/* ================= round manager ================= */
+let RUN=null;
+const PRAISE=["أحسنت! 🌟","رائع! 👏","ممتاز! 🎉","بطل! 🏆","إجابة صحيحة! ✨","عمل جميل! 💚"];
+const TRY=["حاول مرة أخرى 💪","فكّر مرة أخرى 🤔","قريب! جرّب من جديد","لا بأس، حاول ثانية 🙂"];
+const api={
+  miss(msg,silent){if(!RUN)return;RUN.miss++;if(silent)return;SFX.bad();toast(msg||rnd(TRY),"bad");},
+  step(msg){SFX.step();if(msg)toast(msg,"good");},
+  win(msg){if(!RUN||RUN.done)return;RUN.done=true;const tok=RUN;
+    if(RUN.miss===0)RUN.perfect++;RUN.res[RUN.i]=RUN.miss===0?"done":"part";drawProg();
+    SFX.ok();burst(45);toast(msg||rnd(PRAISE),"good");setTimeout(()=>{if(RUN===tok)nextRound();},1500);}
+};
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem("g4m_"+k)||"null");localStorage.setItem("g4m_"+k,JSON.stringify(v));}catch(e){return null;}}
+function starsHTML(n){return `<span class="stars">${[1,2,3].map(i=>i<=n?"★":`<span class="off">★</span>`).join("")}</span>`;}
+
+/* ================= GAMES ================= */
+const GAMES=[];
+
+/* ---------- 4-1 balloons ---------- */
+GAMES.push({id:"g41",unit:4,lesson:"4-1",title:"الحساب الذهني: الضرب في مضاعفات العدد 10",game:"صيد البالونات",icon:"🎈",rounds:10,
+  intro:"اضغط البالون الذي يحمل الإجابة الصحيحة.",
+  setup(){
+    const P=[[30,10],[50,10],[20,10],[60,20],[90,40],[80,50],[20,70],[70,90],[40,20],[40,30],[70,40],[20,30],[60,40],[60,90],[30,80],[60,60],[50,90],[30,70],[70,60],[40,50],[10,90],[40,10],[10,50],[20,60],[50,40],[20,40],[20,20],[50,20],[50,30],[60,30]];
+    const M=[[10,0,100],[0,20,1600],[0,30,1500],[20,0,1000],[0,90,8100],[60,0,4200],[10,0,200],[40,0,3600],[50,0,4000],[70,0,700],[30,0,2700],[0,70,3500],[0,90,7200],[20,0,1800],[40,0,3200],[0,7,280],[0,40,1600],[0,50,3000]];
+    this.deck=shuffle([...pick(P,6).map(x=>({t:"p",a:x[0],b:x[1]})),...pick(M,4).map(x=>({t:"m",a:x[0],b:x[1],c:x[2]}))]);
+  },
+  play(st,i){
+    const q=this.deck[i];let ans,expr,hint,c;
+    if(q.t==="p"){ans=q.a*q.b;expr=`${q.a} × ${q.b} = <span class="qm">?</span>`;
+      hint=`ابدأ بالحقيقة الأساسية ${m(strip(q.a)+" × "+strip(q.b))}، ثم انتبه لعدد الأصفار.`;
+      c=[ans*10,ans/10,(q.a+10)*q.b,q.a*(q.b+10),q.a*q.b+q.a];}
+    else{const k=q.a||q.b;ans=q.c/k;expr=q.a?`${q.a} × <span class="qm">?</span> = ${fmt(q.c)}`:`<span class="qm">?</span> × ${q.b} = ${fmt(q.c)}`;
+      hint=strip(k)>1&&strip(ans)>1?`فكّر: ${m(strip(k)+" × ? = "+strip(k)*strip(ans))}، ثم انتبه لعدد الأصفار.`:`قارن عدد الأصفار في العامل المعلوم وفي الناتج.`;
+      c=[ans*10,ans/10,ans+10,ans-10,ans*100];}
+    const opts=shuffle([ans,...pick(uniq(c.filter(x=>Number.isInteger(x)&&x>0&&x!==ans)),3)]);
+    const cols=["#F7AFC3","#BFA2E0","#A9DDF6","#C6E68F","#FFD978"];
+    st.innerHTML=`<div class="task">${q.t==="p"?"ما ناتج الضرب؟":"ما العامل الناقص؟"}</div>
+      <div class="qcard">${expr}</div>
+      <div class="sky">${opts.map((o,j)=>`<button class="balloon" style="--c:${cols[j]};animation-delay:${-j*.6}s" data-v="${o}">${fmt(o)}</button>`).join("")}</div>
+      <div style="text-align:center;margin-top:16px"><button class="btn ghost" id="hb">💡 تلميح</button></div><div id="hint"></div>`;
+    $("#hb").onclick=()=>{$("#hint").innerHTML=`<div class="hint">${hint}</div>`;};
+    $$(".balloon",st).forEach(b=>b.onclick=()=>{
+      if(+b.dataset.v===ans){b.classList.add("popped");SFX.pop();$(".qcard .qm",st).textContent=fmt(ans);api.win();}
+      else{b.classList.add("dim");api.miss();}
+    });
+  }});
+
+/* ---------- 4-5 grid / partial products ---------- */
+GAMES.push({id:"g45",unit:4,lesson:"4-5",title:"الشبكات ونواتج الضرب الجزئية",game:"مهندس الشبكات",icon:"🟪",rounds:4,
+  intro:"قسّم الشبكة إلى عشرات وآحاد، ثم أوجد نواتج الضرب الجزئية واجمعها.",
+  setup(){
+    const L=[[24,13,"توجد 24 صفًّا من الدببة، في كلّ صفّ 13 دبًّا."],[14,23,"يحتوي مسرح على 14 صفًّا من المقاعد، وفي كلّ صفّ 23 مقعدًا."],[13,14,"لوحة بالونات: 13 بالونًا رأسيًّا و14 بالونًا أفقيًّا."],[17,14,"يحتوي مسرح على 17 صفًّا من المقاعد، في كلّ صفّ 14 مقعدًا."],[22,14,"يتمرّن لاعب كرة قدم 22 ساعة كلّ أسبوع لمدة 14 أسبوعًا."],
+      [24,16,""],[14,21,""],[14,12,""],[18,18,""],[15,13,""],[26,18,""],[23,23,""],[19,27,""],[11,16,""],[12,24,""],[12,18,""]];
+    this.deck=[...pick(L.slice(0,5),2),...pick(L.slice(5),2)];this.deck=shuffle(this.deck);
+  },
+  play(st,i){
+    const [a,b,story]=this.deck[i];const ta=tens(a),tb=tens(b);
+    st.innerHTML=`<div class="task">${story} استعمل الشبكة لإيجاد ${m(a+" × "+b)}</div>
+      <div class="row"><div class="col" style="text-align:center">
+        <div class="gridbox"><div class="collabs" id="cl"></div><div class="rowwrap"><div class="rowlabs" id="rl"></div><div class="grid" id="gr"><div id="regs"></div><div class="vl" id="vl"></div><div class="hl" id="hl"></div></div></div></div>
+      </div><div class="col" id="side"></div></div>`;
+    const gr=$("#gr"),avail=st.clientWidth>720?st.clientWidth/2-80:st.clientWidth-80;
+    const cs=Math.max(8,Math.min(20,Math.floor(Math.min(avail/b,330/a))));
+    gr.style.width=b*cs+"px";gr.style.height=a*cs+"px";
+    gr.style.backgroundImage=`linear-gradient(#C9D6E6 1px,transparent 1px),linear-gradient(90deg,#C9D6E6 1px,transparent 1px)`;gr.style.backgroundSize=`${cs}px ${cs}px`;
+    const S={ph:"v",col:null,row:null};const side=$("#side");
+    const labC=()=>{$("#cl").innerHTML=S.col==null?`<span style="width:${b*cs}px">${b}</span>`:`<span style="width:${S.col*cs}px">${S.col}</span><span style="width:${(b-S.col)*cs}px">${b-S.col}</span>`;};
+    const labR=()=>{$("#rl").innerHTML=S.row==null?`<span style="height:${a*cs}px">${a}</span>`:`<span style="height:${S.row*cs}px">${S.row}</span><span style="height:${(a-S.row)*cs}px">${a-S.row}</span>`;};
+    labC();labR();
+    const phaseV=()=>{side.innerHTML=`<div class="stepbar">الخطوة 1: اقسم ${m(b)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا رأسيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
+    const phaseH=()=>{side.innerHTML=`<div class="stepbar">الخطوة 2: اقسم ${m(a)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا أفقيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
+    function confirm(){
+      if(S.ph==="v"){if(S.col==null){toast("اضغط على الشبكة أولًا");return;}
+        if(S.col===tb||b-S.col===tb){api.step("صحيح! "+b+" = "+tb+" + "+(b-tb));S.ph="h";phaseH();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
+      else if(S.ph==="h"){if(S.row==null){toast("اضغط على الشبكة أولًا");return;}
+        if(S.row===ta||a-S.row===ta){api.step("صحيح! "+a+" = "+ta+" + "+(a-ta));S.ph="p";phaseP();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
+    }
+    gr.addEventListener("click",e=>{const r=gr.getBoundingClientRect();
+      if(S.ph==="v"){const c=Math.round((e.clientX-r.left)/cs);S.col=Math.min(b-1,Math.max(1,c));const vl=$("#vl");vl.style.display="block";vl.style.left=S.col*cs+"px";labC();SFX.tap();}
+      else if(S.ph==="h"){const c=Math.round((e.clientY-r.top)/cs);S.row=Math.min(a-1,Math.max(1,c));const hl=$("#hl");hl.style.display="block";hl.style.top=S.row*cs+"px";labR();SFX.tap();}});
+    function phaseP(){
+      const L=S.col,R=b-S.col,T=S.row,B=a-S.row;
+      const regs=[{r:T,c:L,x:0,y:0,col:"var(--pink)"},{r:T,c:R,x:L,y:0,col:"var(--lilac)"},{r:B,c:L,x:0,y:T,col:"var(--aqua)"},{r:B,c:R,x:L,y:T,col:"var(--lime)"}];
+      $("#regs").innerHTML=regs.map(g=>`<div class="reg" style="left:${g.x*cs}px;top:${g.y*cs}px;width:${g.c*cs}px;height:${g.r*cs}px;background:${g.col}">${g.c*cs>50&&g.r*cs>22?g.r+"×"+g.c:""}</div>`).join("");
+      side.innerHTML=`<div class="stepbar">الخطوة 3: أوجد نواتج الضرب الجزئية</div>`+regs.map((g,j)=>`<div class="pp"><span class="m">${g.r} × ${g.c} =</span><span id="pf${j}"></span><span class="chip" style="background:${g.col}"></span></div>`).join("")+padHTML();
+      regs.forEach((g,j)=>Pad.field($("#pf"+j),{max:4,onEnter:f=>{if(Pad.value(f)===g.r*g.c){Pad.good(f);SFX.step();if(!Pad.next())phaseS(regs);}else{Pad.wrong(f);api.miss();}}}));
+      Pad.next();
+    }
+    function phaseS(regs){
+      const ps=regs.map(g=>g.r*g.c);
+      side.innerHTML=`<div class="stepbar">الخطوة 4: اجمع نواتج الضرب الجزئية</div><div style="text-align:center"><div class="vsum">${ps.map((p,j)=>`<div>${j===3?"+ ":""}${fmt(p)}</div>`).join("")}<div class="ln"></div><div><span id="sf"></span></div></div></div>`+padHTML();
+      Pad.field($("#sf"),{max:4,onEnter:f=>{if(Pad.value(f)===a*b){Pad.good(f);api.win(`${a} × ${b} = ${fmt(a*b)} 🎉`);}else{Pad.wrong(f);api.miss();}}});
+      Pad.next();
+    }
+    phaseV();
+  }});
+
+/* ---------- 4-6 distributive ---------- */
+GAMES.push({id:"g46",unit:4,lesson:"4-6",title:"الضرب باستعمال خاصية التوزيع",game:"بطاقات التوزيع",icon:"🧩",rounds:5,
+  intro:"اضغط على الخانة ثم على البطاقة المناسبة لتكمل خطوات خاصية التوزيع.",
+  setup(){const L=[[25,15],[23,24],[35,12],[18,25],[16,27],[41,12],[38,27],[58,19],[29,15],[73,47],[23,18],[14,19],[12,22],[21,51],[28,38],[51,12],[73,13],[99,11],[16,14],[17,38],[56,17],[11,13],[29,64],[24,18],[26,19],[28,17],[27,15]];this.deck=pick(L,5);},
+  play(st,i){
+    const [a,b]=this.deck[i];const A=[tens(a),a%10],B=[tens(b),b%10];
+    const sl=n=>Array.from({length:n},(_,k)=>k);
+    st.innerHTML=`<div class="task">استعمل خاصيّة التوزيع لإيجاد ${m(a+" × "+b)}</div>
+      <div class="dist">
+        <div class="dl" id="l1">${a} × ${b} = (<i class="slot" data-l="1"></i>+<i class="slot" data-l="1"></i>) × (<i class="slot" data-l="1"></i>+<i class="slot" data-l="1"></i>)<button class="btn" id="c1" style="margin-inline-start:8px">تحقّق</button></div>
+        <div class="dl" id="l2" hidden>= ${sl(4).map(k=>`(<i class="slot" data-l="2"></i>×<i class="slot" data-l="2"></i>)`).join(" + ")}<button class="btn" id="c2" style="margin-inline-start:8px">تحقّق</button></div>
+        <div class="dl" id="l3" hidden></div>
+        <div class="dl" id="l4" hidden></div>
+      </div>
+      <div class="tiles" id="tiles">${shuffle(uniq([...A,...B])).map(v=>`<button class="tile" data-v="${v}">${v}</button>`).join("")}</div>
+      <p class="sub" style="text-align:center">اضغط الخانة، ثم اضغط البطاقة.</p>`;
+    let sel=null;let line=1;
+    const slots=l=>$$(`.slot[data-l="${l}"]`,st);
+    const choose=s=>{$$(".slot",st).forEach(x=>x.classList.remove("sel"));sel=s;if(s)s.classList.add("sel");};
+    const nextEmpty=()=>slots(line).find(s=>!s.dataset.v);
+    $$(".slot",st).forEach(s=>s.onclick=()=>{if(+s.dataset.l===line)choose(s);});
+    $$(".tile",st).forEach(t=>t.onclick=()=>{if(!sel)choose(nextEmpty());if(!sel)return;sel.dataset.v=t.dataset.v;sel.textContent=t.dataset.v;sel.classList.add("f");SFX.tap();choose(nextEmpty()||null);});
+    choose(nextEmpty());
+    const vals=l=>slots(l).map(s=>s.dataset.v===undefined?null:+s.dataset.v);
+    const key=p=>[...p].sort((x,y)=>x-y).join(",");
+    $("#c1").onclick=()=>{const v=vals(1);if(v.includes(null)){toast("أكمل كلّ الخانات");return;}
+      const g1=key(v.slice(0,2)),g2=key(v.slice(2));
+      if((g1===key(A)&&g2===key(B))||(g1===key(B)&&g2===key(A))){slots(1).forEach(s=>{s.classList.add("ok");s.onclick=null;});$("#c1").remove();api.step("فكّكت العاملين بشكل صحيح!");line=2;$("#l2").hidden=false;choose(nextEmpty());}
+      else{api.miss("فكّك كلّ عامل إلى عشرات وآحاد");slots(1).forEach(s=>{delete s.dataset.v;s.textContent="";s.classList.remove("f");});choose(nextEmpty());}};
+    $("#c2").onclick=()=>{const v=vals(2);if(v.includes(null)){toast("أكمل كلّ الخانات");return;}
+      const pairs=[0,2,4,6].map(k=>key([v[k],v[k+1]])).sort();
+      const exp=[key([A[0],B[0]]),key([A[1],B[0]]),key([A[0],B[1]]),key([A[1],B[1]])].sort();
+      if(pairs.join("|")===exp.join("|")){slots(2).forEach(s=>{s.classList.add("ok");s.onclick=null;});$("#c2").remove();$("#tiles").hidden=true;$(".sub",st).hidden=true;api.step("ممتاز! هذه نواتج الضرب الجزئية الأربعة");
+        const ps=[0,2,4,6].map(k=>v[k]*v[k+1]);const l3=$("#l3");l3.hidden=false;l3.innerHTML="= "+ps.map(fmt).join(" + ");
+        const T=a*b,c=[T-A[1]*B[0]-A[0]*B[1],T+10,T-10,T+100,A[0]*B[0]+A[1]*B[1]+A[0]*B[1]];
+        const opts=shuffle([T,...pick(uniq(c.filter(x=>x>0&&x!==T)),3)]);
+        const l4=$("#l4");l4.hidden=false;l4.innerHTML=`= <div class="opts" style="margin:0">${opts.map(o=>`<button class="opt" data-v="${o}">${fmt(o)}</button>`).join("")}</div>`;
+        $$(".opt",l4).forEach(o=>o.onclick=()=>{if(+o.dataset.v===T){o.classList.add("yes");api.win(`${a} × ${b} = ${fmt(T)} 🎉`);}else{o.classList.add("no");api.miss();}});}
+      else{api.miss("اضرب كلّ جزء من العامل الأول في كلّ جزء من العامل الثاني");slots(2).forEach(s=>{delete s.dataset.v;s.textContent="";s.classList.remove("f");});choose(nextEmpty());}};
+  }});
+
+/* ---------- 4-8 memory ---------- */
+GAMES.push({id:"g48",unit:4,lesson:"4-8",title:"ضرب عدد من رقمين في مضاعفات العدد 10",game:"ذاكرة الأبطال",icon:"🃏",rounds:2,
+  intro:"اقلب بطاقتين: طابق كلّ عملية ضرب مع ناتجها.",
+  setup(){
+    const L=[[28,20],[23,90],[12,20],[21,30],[27,60],[66,40],[12,30],[24,50],[33,20],[71,30],[18,30],[20,51],[32,30],[40,22],[34,50],[40,73],[10,52],[30,97],[30,26],[23,50],[30,82],[75,70],[93,50],[66,20],[53,40],[32,20],[82,80],[60,14],[50,52],[38,70]];
+    const boards=[[],[]];const used=new Set();
+    for(const p of shuffle(L)){const pr=p[0]*p[1];if(used.has(pr))continue;const bd=boards.find(x=>x.length<6);if(!bd)break;bd.push(p);used.add(pr);}
+    this.deck=boards;
+  },
+  play(st,i){
+    const bd=this.deck[i];
+    const cards=shuffle(bd.flatMap((p,k)=>[{k,t:"q",txt:`${p[0]} × ${p[1]}`,p},{k,t:"a",txt:fmt(p[0]*p[1])}]));
+    st.innerHTML=`<div class="task">لوحة ${i+1}: طابق كلّ عملية ضرب مع ناتجها.</div>
+      <div class="mwrap"><div class="mboard">${cards.map((c,j)=>`<button class="mcard" data-j="${j}" aria-label="بطاقة"><div class="in"><div class="bk">؟</div><div class="fr ${c.t==="a"?"pr":""}">${c.txt}</div></div></button>`).join("")}</div>
+      <div class="wsheet" id="ws"><h4>ورقة العمل ✏️</h4><p style="margin:0">اقلب بطاقة عملية ضرب لتراها هنا مكتوبة رأسيًّا.</p></div></div>`;
+    let open=[],lock=false,got=0,mis=0;
+    const ws=$("#ws");
+    const sheet=p=>{const [x,y]=p;const big=Math.max(x,y),mul=Math.min(x,y)%10===0?Math.min(x,y):(x%10===0?x:y),oth=mul===x?y:x;
+      ws.innerHTML=`<h4>ورقة العمل ✏️</h4><div style="text-align:center"><div class="vmul"><div>${oth}</div><div>× ${mul}</div><div class="ln"></div><div style="color:#9AA7BA">?0</div></div></div><p style="margin:0">اكتب 0 في منزلة الآحاد، ثم اضرب ${m(oth+" × "+mul/10)}.</p>`;};
+    $$(".mcard",st).forEach(el=>el.onclick=()=>{
+      const c=cards[+el.dataset.j];if(lock||el.classList.contains("open")||el.classList.contains("got"))return;
+      el.classList.add("open");SFX.tap();if(c.t==="q")sheet(c.p);open.push({el,c});
+      if(open.length===2){const [x,y]=open;open=[];
+        if(x.c.k===y.c.k&&x.c.t!==y.c.t){setTimeout(()=>{x.el.classList.add("got");y.el.classList.add("got");SFX.step();},350);got++;
+          if(got===bd.length)setTimeout(()=>api.win("طابقت كلّ البطاقات! 🎉"),700);}
+        else{lock=true;mis++;if(mis===8)api.miss(null,true);setTimeout(()=>{x.el.classList.remove("open");y.el.classList.remove("open");lock=false;},950);}
+      }});
+  }});
+
+/* ---------- 4-9 factory (2-digit x 2-digit) ---------- */
+GAMES.push({id:"g49",unit:4,lesson:"4-9",title:"ضرب عدد من رقمين في عدد من رقمين",game:"مصنع الضرب",icon:"🏭",rounds:5,
+  intro:"اضرب في الآحاد، ثم في العشرات، ثم اجمع نواتج الضرب الجزئية، وتحقّق بالتقدير.",
+  setup(){const L=[[37,24],[41,23],[16,22],[15,16],[27,12],[36,23],[18,42],[34,21],[53,17],[81,46],[17,21],[12,22],[38,41],[42,52],[38,19],[24,13],[18,26],[17,25],[88,32],[53,48],[18,77],[67,27],[67,34],[91,46],[56,31],[67,57]];this.deck=pick(L,5);},
+  play(st,i){
+    const [a,b]=this.deck[i];const ob=b%10,tb=tens(b);const P1=a*ob,P2=a*tb,S=a*b;
+    const W=String(S).length+1;
+    const st8={step:1};
+    st.innerHTML=`<div class="task">أوجد ناتج ${m(a+" × "+b)}</div><div class="row"><div class="col" style="text-align:center"><div id="dg"></div></div><div class="col"><div class="stepbar" id="sb"></div><div id="ar"></div></div></div>`;
+    let f1=null,f2=null,f3=null;
+    f1=Pad.field(null,{max:String(P1).length,render:draw,onEnter:f=>chk(f,P1,2,`صحيح! ${a} × ${ob} = ${fmt(P1)}`)});
+    f2=Pad.field(null,{max:String(P2).length-1,suffix:"0",render:draw,onEnter:f=>chk(f,P2,3,`صحيح! ${a} × ${tb} = ${fmt(P2)}`)});
+    f3=Pad.field(null,{max:String(S).length,render:draw,onEnter:f=>chk(f,S,4)});
+    function chk(f,exp,nx,msg){if(Pad.value(f)===exp){Pad.good(f);api.step(msg);st8.step=nx;if(nx===4)estimate();else Pad.focus([f1,f2,f3][nx-1]);bar();draw();}else{Pad.wrong(f);api.miss();draw();}}
+    function cells(str,{hl=-1,cls=""}={}){const s=String(str);let h="";for(let c=0;c<W;c++){const k=c-(W-s.length);h+=`<div class="c ${cls}">${k>=0?`<span class="${k===hl?"hlt":""}">${s[k]}</span>`:""}</div>`;}return h;}
+    function boxes(f,len){const typed=f.val+f.suffix;let h="";const fixedFrom=len-f.suffix.length;
+      for(let c=0;c<W;c++){const k=c-(W-len);if(k<0){h+=`<div class="c"></div>`;continue;}
+        const fixed=k>=fixedFrom;const ch=fixed?f.suffix[k-fixedFrom]:(f.val[k]||"");
+        const on=!f.locked&&Pad.active===f&&!fixed&&k===Math.min(f.val.length,fixedFrom-1);
+        h+=`<div class="c"><div class="bx ${fixed?"fx":""} ${on?"on":""} ${f.locked?"ok":""}">${ch}</div></div>`;}return h;}
+    function draw(){const g=$("#dg");if(!g||!f1||!f2||!f3)return;
+      const hlB=st8.step===1?1:st8.step===2?0:-1;
+      let h=cells(a)+(()=>{let s="";const bs=String(b);for(let c=0;c<W;c++){const k=c-(W-bs.length);s+=`<div class="c">${c===0?"×":k>=0?`<span class="${k===hlB?"hlt":""}">${bs[k]}</span>`:""}</div>`;}return s;})();
+      h+=`<div class="ln" style="grid-column:1/-1"></div>`;
+      h+=boxes(f1,String(P1).length);
+      h+=(st8.step>=2?boxes(f2,String(P2).length).replace('<div class="c"></div>','<div class="c">+</div>'):"");
+      if(st8.step>=3){h+=`<div class="ln" style="grid-column:1/-1"></div>`+boxes(f3,String(S).length);}
+      g.innerHTML=`<div class="dg" style="grid-template-columns:repeat(${W},auto)">${h}</div>`;}
+    function bar(){const sb=$("#sb");
+      sb.innerHTML=st8.step===1?`اضرب في الآحاد: ${m(a+" × "+ob)}`:st8.step===2?`اضرب في العشرات: ${m(a+" × "+tb)}`:st8.step===3?`اجمع نواتج الضرب الجزئية`:`استعمل التقدير للتحقّق`;
+      if(st8.step<=3)$("#ar").innerHTML=padHTML();}
+    function estimate(){
+      const ra=Math.round(a/10)*10,rb=Math.round(b/10)*10,E=ra*rb;
+      const c=[E*10,E/10,(ra+10)*rb,ra*(rb+10)].filter(x=>Number.isInteger(x)&&x>0&&x!==E);
+      const opts=shuffle([E,...pick(uniq(c),3)]);
+      $("#ar").innerHTML=`<p>قرّب كلّ عامل إلى أقرب 10. ما التقدير؟</p><div class="opts">${opts.map(o=>`<button class="opt" data-v="${o}">${fmt(o)}</button>`).join("")}</div>`;
+      $$(".opt",st).forEach(o=>o.onclick=()=>{if(+o.dataset.v===E){o.classList.add("yes");api.win(`${fmt(S)} قريب من ${fmt(E)}، الإجابة منطقية ✔`);}else{o.classList.add("no");api.miss();}});
+    }
+    bar();Pad.focus(f1);draw();
+  }});
+
+/* ---------- 5-1 pattern train ---------- */
+GAMES.push({id:"g51",unit:5,lesson:"5-1",title:"الحساب الذهني: إيجاد ناتج القسمة",game:"قطار الأنماط",icon:"🚂",rounds:8,
+  intro:"استعمل حقائق القسمة الأساسية والأنماط لتملأ عربات القطار.",
+  setup(){
+    const B=[[28,7],[64,8],[36,9],[10,2],[45,5],[24,8],[25,5],[14,2],[30,5],[16,4],[21,7],[42,6],[18,6]];
+    const S=[[2000,5],[360,4],[540,9],[160,4],[900,3],[3200,8],[360,6],[1800,3],[7200,8],[500,5],[350,7],[6300,9],[1600,2],[210,7],[4800,6],[600,6],[120,6],[720,9],[200,4],[2800,7],[5000,5],[240,8],[3600,4],[4200,7],[640,8],[320,8],[810,9],[270,3],[1200,2],[300,6],[1800,6]];
+    const Mi=[[7,70],[8,50],[4,800]];
+    this.deck=shuffle([...pick(B,4).map(x=>({t:"pat",f:x[0],d:x[1]})),...pick(S,3).map(x=>({t:"one",n:x[0],d:x[1]})),...pick(Mi,1).map(x=>({t:"mis",d:x[0],q:x[1]}))]);
+  },
+  play(st,i){
+    const q=this.deck[i];let wag=[];let hint;
+    const basic=(n,d)=>{const s=String(n);let k=1;while(k<s.length&&+s.slice(0,k)<d)k++;return +s.slice(0,k)<d?n:+s.slice(0,k);};
+    if(q.t==="pat"){wag=[1,10,100].map(k=>({lhs:`${fmt(q.f*k)} ÷ ${q.d} =`,ans:q.f*k/q.d}));hint=`الحقيقة الأساسية: ${m(q.f+" ÷ "+q.d)}`;}
+    else if(q.t==="one"){wag=[{lhs:`${fmt(q.n)} ÷ ${q.d} =`,ans:q.n/q.d}];const bf=basic(q.n,q.d);hint=`الحقيقة الأساسية: ${m(bf+" ÷ "+q.d)}`;}
+    else{wag=[{lhs:null,rhs:`÷ ${q.d} = ${fmt(q.q)}`,ans:q.q*q.d}];hint=`فكّر: ${m(fmt(q.q)+" × "+q.d+" = ?")}`;}
+    st.innerHTML=`<div class="task">${q.t==="pat"?"استعمل النمط لتملأ العربات الثلاث.":q.t==="mis"?"اكتب العدد الناقص الذي يمثّل المقسوم.":"أوجد ناتج القسمة ذهنيًّا."}</div>
+      <div class="trainwrap" dir="ltr"><div class="track"><div class="train" id="tr">
+        ${wag.map((w,j)=>`<div class="wagon" id="w${j}"><div class="body">${w.lhs?`<span>${w.lhs}</span><span id="wf${j}"></span>`:`<span id="wf${j}"></span><span>${w.rhs}</span>`}</div><i class="wheel" style="left:16px"></i><i class="wheel" style="right:16px"></i></div>`).join("")}
+        <div class="engine"><div class="boil"></div><div class="chim"></div><div class="cab"></div><div class="win"></div><i class="wheel" style="left:8px"></i><i class="wheel" style="right:6px"></i></div>
+      </div></div></div>
+      <div style="text-align:center"><button class="btn ghost" id="hb">💡 تلميح</button></div><div id="hint"></div>${padHTML()}`;
+    $("#hb").onclick=()=>$("#hint").innerHTML=`<div class="hint">${hint}</div>`;
+    let pos=0;
+    wag.forEach((w,j)=>Pad.field($("#wf"+j),{max:5,onEnter:f=>{
+      if(Pad.value(f)===w.ans){Pad.good(f);$("#w"+j).classList.add("ok");$("#w"+j).classList.remove("act");pos++;
+        if(pos===wag.length){$("#tr").classList.add("go");SFX.pop();api.win("انطلق القطار! 🚂");}
+        else{api.step();const n=Pad.next();$("#w"+pos).classList.add("act");}}
+      else{Pad.wrong(f);api.miss();}}}));
+    Pad.next();$("#w0").classList.add("act");
+  }});
+
+/* ---------- 5-2 darts (estimate quotients) ---------- */
+GAMES.push({id:"g52",unit:5,lesson:"5-2",title:"الحساب الذهني: تقدير ناتج القسمة",game:"رامي السهام",icon:"🎯",rounds:8,
+  intro:"اختر عددًا متناغمًا قريبًا من المقسوم، ثم اختر التقدير.",
+  setup(){
+    const L=[[700,9,720,"لدى ماجد 700 رباط مطاطي لتكوين 9 كرات."],[460,9,450],[248,3,240,"فاز ثلاثة أصدقاء بـ 248 تذكرة، وقرّروا توزيعها بالتساوي."],[132,6,120],[235,8,240],[547,6,540],[192,5,200],[662,8,640],[362,3,360],[211,4,200],[430,9,450],[620,7,630],[232,6,240],[342,8,320],[813,8,800],[481,4,480],[552,7,560],[392,2,400],[625,3,600],[165,4,160],[715,9,720],[490,8,480],[512,5,500],[790,9,810],[200,7,210],[311,6,300],[162,2,160],[418,6,420],[554,7,560],[92,3,90],[351,7,350],[497,5,500],[202,2,200],[153,3,150],[174,9,180],[644,7,630,"تستغرق محطة الفضاء الدولية 644 دقيقة لتدور حول الأرض 7 مرات."]];
+    this.deck=pick(L,8);
+  },
+  play(st,i){
+    const [n,d,C,story]=this.deck[i];const E=C/d;
+    let cand=[n,n+10,n-10,n+5,n-5,C+10,C-10,C+20,C-20,n+1,n-1,C+1,C-1,C+2].filter(x=>x>0&&x!==C&&x%d!==0);
+    cand=uniq(cand);const dist=[];if(cand.includes(n))dist.push(n);for(const x of shuffle(cand))if(dist.length<2&&!dist.includes(x))dist.push(x);
+    const o1=shuffle([C,...dist]);
+    const c2=[E*10,E+10,E-10,E*100,Math.round(E/10)].filter(x=>Number.isInteger(x)&&x>0&&x!==E);
+    const o2=shuffle([E,...pick(uniq(c2),3)]);
+    st.innerHTML=`<div class="task">${story?story+" ":""}قدّر ناتج ${m(n+" ÷ "+d)}</div>
+      <div class="stepbar" id="sb">الرمية 1: اختر عددًا قريبًا من ${m(n)} تسهُل قسمته على ${m(d)}</div>
+      <div class="range" id="rg">${o1.map(v=>`<button class="tgt" data-v="${v}"><span>${fmt(v)}</span></button>`).join("")}</div>
+      <div class="est" id="es"></div>`;
+    const dart=document.createElement("div");dart.className="dart";dart.textContent="➶";st.appendChild(dart);
+    const home=()=>{dart.style.transition="none";dart.style.transform=`translate(${st.clientWidth/2-17}px,${st.clientHeight-60}px) rotate(-45deg)`;void dart.offsetWidth;dart.style.transition="";};
+    dart.style.left="0";dart.style.top="0";home();
+    const shoot=(t,cb)=>{const r=t.getBoundingClientRect(),s=st.getBoundingClientRect();
+      dart.style.transform=`translate(${r.left-s.left+r.width/2-10}px,${r.top-s.top+r.height/2-24}px) rotate(-45deg)`;SFX.tap();setTimeout(cb,470);};
+    let busy=false;
+    const bind=(vals,ok)=>$$(".tgt",st).forEach(t=>t.onclick=()=>{if(busy)return;busy=true;shoot(t,()=>{busy=false;
+      if(+t.dataset.v===vals){ok(t);}else{t.classList.add("no");api.miss();home();}});});
+    bind(C,()=>{api.step(`عدد متناغم: ${C} ÷ ${d} سهلة!`);setTimeout(()=>{home();
+      $("#sb").innerHTML=`الرمية 2: ${m(fmt(C)+" ÷ "+d+" = ?")}`;
+      $("#rg").innerHTML=o2.map(v=>`<button class="tgt" data-v="${v}"><span>${fmt(v)}</span></button>`).join("");
+      bind(E,()=>{$("#es").textContent=`${n} ÷ ${d} ≈ ${fmt(E)}`;api.win(`التقدير: ${fmt(E)} تقريبًا 🎯`);});},700);});
+  }});
+
+/* ---------- 5-4 interpret remainders ---------- */
+GAMES.push({id:"g54",unit:5,lesson:"5-4",title:"تفسير باقي القسمة",game:"ماذا أفعل بالباقي؟",icon:"📦",rounds:8,
+  intro:"اكتب جملة القسمة، ثم قرّر ماذا تفعل بالباقي لتجيب عن السؤال.",
+  setup(){
+    // [text, question, n, d, type, item, holder]  type: ig=ignore, rem=answer is remainder, add=add 1
+    const L=[
+      ["لدى نايف 27 بطاقة كرة قدم، ويضع 6 بطاقات في كلّ صفحة من الألبوم.","كم صفحة ملأها نايف بالكامل؟",27,6,"ig","🃏","صفحة"],
+      ["لدى نايف 27 بطاقة كرة قدم، ويضع 6 بطاقات في كلّ صفحة من الألبوم.","كم صفحة استعملها نايف؟",27,6,"add","🃏","صفحة"],
+      ["لدى نايف 27 بطاقة كرة قدم، ويضع 6 بطاقات في كلّ صفحة من الألبوم.","كم بطاقة وضعها نايف في الصفحة الخامسة؟",27,6,"rem","🃏","بطاقة"],
+      ["لديك 14 تفاحة، وتخطّط لوضع 4 تفاحات في كلّ سلّة.","كم سلّة يمكنك ملؤها؟",14,4,"ig","🍎","سلّة"],
+      ["لديك 14 تفاحة، وتخطّط لوضع 4 تفاحات في كلّ سلّة.","كم تفاحة تبقى خارج السلال؟",14,4,"rem","🍎","تفاحة"],
+      ["يريد جمال وضع 20 كرة زجاجية في أكياس، 6 كرات في كلّ كيس.","كم كيسًا يستطيع جمال أن يملأ؟",20,6,"ig","🔮","كيس"],
+      ["يريد جمال وضع 20 كرة زجاجية في أكياس، 6 كرات في كلّ كيس.","ما عدد الأكياس اللازمة لوضع كلّ الكرات؟",20,6,"add","🔮","كيس"],
+      ["يضع حسن 23 قميصًا في صناديق، يتّسع كلّ صندوق لـ 3 قمصان.","ما عدد الصناديق التي سيملؤها حسن؟",23,3,"ig","👕","صندوق"],
+      ["يضع حسن 23 قميصًا في صناديق، يتّسع كلّ صندوق لـ 3 قمصان.","ما عدد الصناديق التي سيحتاج إليها حسن؟",23,3,"add","👕","صندوق"],
+      ["لدى خالد 59 بطاقة كرة قدم، 3 بطاقات في كلّ صفحة.","ما عدد الصفحات التي يستطيع خالد ملأها بالكامل؟",59,3,"ig","🃏","صفحة"],
+      ["لدى خالد 55 بطاقة كرة سلّة، 4 بطاقات في كلّ صفحة.","ما عدد البطاقات في الصفحة الأخيرة؟",55,4,"rem","🃏","بطاقة"],
+      ["لدى خالد 84 ملصقًا، 5 ملصقات في كلّ صفحة.","ما عدد الصفحات التي تمّ استعمالها؟",84,5,"add","⭐","صفحة"],
+      ["لدينا 77 تفاحة، 3 تفاحات في كلّ كيس.","ما عدد التفاح الذي خارج الأكياس؟",77,3,"rem","🍎","تفاحة"],
+      ["لدينا 71 بطاقة، 5 بطاقات في كلّ صندوق.","ما عدد الصناديق اللازمة لوضع كلّ البطاقات؟",71,5,"add","🃏","صندوق"],
+      ["يتألّف صفّ من 39 طالبًا. أراد المعلم توزيع الطلاب إلى فرق من 9.","ما عدد الفرق الكاملة التي كوّنها؟",39,9,"ig","🧒","فريق"],
+      ["تقدّم 14 طالبًا لاختبارات فرق الكرة الطائرة، سيضمّ كلّ فريق 6 لاعبين.","ما عدد الطلاب الذين لن يكونوا ضمن فريق؟",14,6,"rem","🧒","طالب"],
+      ["لدى خالد 98 صورة، ويمكنه وضع 8 صور في كلّ صفحة من الألبوم.","كم صورة سيضع خالد في الصفحة الأخيرة؟",98,8,"rem","🖼️","صورة"],
+      ["لدى محمد 85 بطاقة جوائز، والكرة الزجاجية بـ 7 بطاقات.","كم كرة زجاجية يستطيع الحصول عليها؟",85,7,"ig","🎟️","كرة"],
+      ["اشترت جميلة 58 قلمًا ملوّنًا، تقاسمتها هي وشقيقتاها بالتساوي (3 أخوات).","كم قلمًا تبقّى؟",58,3,"rem","🖍️","قلم"]];
+    this.deck=pick(L,8);
+  },
+  play(st,i){
+    const [txt,qq,n,d,type,em,unit]=this.deck[i];const Q=Math.floor(n/d),R=n%d;
+    const ans=type==="ig"?Q:type==="rem"?R:Q+1;
+    st.innerHTML=`<div class="story">${txt}<span class="q">${qq}</span></div>
+      <div class="stepbar" id="sb" style="margin-top:12px">الخطوة 1: اكتب جملة القسمة</div>
+      <div id="body"><div class="eq">${n} ÷ ${d} = <span id="fq"></span> R <span id="fr"></span></div>
+      <div style="text-align:center"><button class="btn ghost" id="pb">🎨 ارسم صورة</button></div><div id="pic"></div>${padHTML()}</div>`;
+    const picture=()=>{let h="";for(let g=0;g<Q;g++)h+=`<div class="box">${em.repeat(d)}</div>`;if(R)h+=`<div class="left">${em.repeat(R)}</div>`;return `<div class="pic">${h}</div>`;};
+    $("#pb").onclick=()=>{$("#pic").innerHTML=picture();};
+    const fq=Pad.field($("#fq"),{max:3,onEnter:f=>{if(Pad.value(f)===Q){Pad.good(f);SFX.step();Pad.next();}else{Pad.wrong(f);api.miss();}}});
+    const fr=Pad.field($("#fr"),{max:2,onEnter:f=>{if(!fq.locked){toast("ابدأ بناتج القسمة");return;}if(Pad.value(f)===R){Pad.good(f);api.step(`${n} ÷ ${d} = ${Q} R${R}`);step2();}else{Pad.wrong(f);api.miss();}}});
+    Pad.next();
+    function step2(){
+      $("#sb").textContent="الخطوة 2: ماذا تفعل بالباقي لتجيب عن السؤال؟";
+      const B=$("#body");B.innerHTML=`<div class="eq">${n} ÷ ${d} = ${Q} R${R}</div>${picture()}
+        <div class="choices">
+          <button class="ch" data-t="ig"><b>✂️</b>أتجاهل الباقي</button>
+          <button class="ch" data-t="rem"><b>🎯</b>الباقي هو الجواب</button>
+          <button class="ch" data-t="add"><b>➕</b>أضيف 1 إلى ناتج القسمة</button></div>`;
+      $$(".ch",B).forEach(c=>c.onclick=()=>{if(c.dataset.t===type){c.classList.add("yes");api.step("قرار صحيح!");setTimeout(step3,500);}else{c.classList.add("no");api.miss();}});
+    }
+    function step3(){
+      $("#sb").textContent="الخطوة 3: اكتب الجواب";
+      $("#body").innerHTML=`<div class="story" style="background:var(--sky-l)">${qq}</div><div class="eq" dir="rtl">الجواب: <span id="fa"></span> <span style="font-family:var(--body);font-size:22px">${unit}</span></div>${padHTML()}`;
+      Pad.field($("#fa"),{max:3,onEnter:f=>{if(Pad.value(f)===ans){Pad.good(f);api.win();}else{Pad.wrong(f);api.miss();}}});Pad.next();
+    }
+  }});
+
+/* ---------- 5-5 sharing with place-value blocks ---------- */
+GAMES.push({id:"g55",unit:5,lesson:"5-5",title:"القسمة كمشاركة",game:"وزّع بالتساوي",icon:"🤝",rounds:4,
+  intro:"وزّع المئات والعشرات والآحاد على المجموعات بالتساوي. فكّك عندما لا يكفي.",
+  setup(){
+    const L=[[238,2,"صنع أعضاء نادٍ 238 سلسلة مفاتيح، ويريدون وضعها في صندوقين بالتساوي."],[39,3,"لدى سالم 39 تذكارًا، يريد ترتيبها في 3 صفوف بالتساوي."],[48,3,"يعرض معلّم الفنون 48 لوحة على 3 جدران بالتساوي."],[176,5,"176 مجلّة موزّعة بالتساوي على 5 صناديق."],[56,3,"56 كرة زجاجية موزّعة بالتساوي على 3 أكياس."],[78,6,"لدى طارق 78 سيارة لعبة، رتّبها في 6 مجموعات متساوية."],[86,5,"استعملت مريم الرسم لقسمة 86 على 5."],
+      [55,4,""],[71,3,""],[46,3,""],[65,4,""],[78,5,""],[66,4,""],[136,4,""],[131,5,""],[76,3,""],[140,6,""],[95,2,""],[96,8,""],[51,2,""]];
+    this.deck=shuffle([...pick(L.slice(0,7),2),...pick(L.slice(7),2)]);
+  },
+  play(st,i){
+    const [n,d,story]=this.deck[i];const Q=Math.floor(n/d),R=n%d;
+    const P={h:Math.floor(n/100),t:Math.floor(n/10)%10,o:n%10};const G=Array.from({length:d},()=>({h:0,t:0,o:0}));
+    const names={h:"مئات",t:"عشرات",o:"آحاد"},cls={h:"hund",t:"ten",o:"one"};
+    st.innerHTML=`<div class="task">${story?story+" ":""}أوجد ${m(n+" ÷ "+d)} بتوزيع النماذج على ${d} مجموعات.</div>
+      <div class="pool" id="pool"></div><div class="groups" id="grps"></div><div id="fin"></div>`;
+    const blocks=(o,k)=>Array.from({length:o[k]},()=>`<i class="${cls[k]}"></i>`).join("");
+    function draw(anim){
+      $("#pool").innerHTML=["h","t","o"].map(k=>`<div class="pcol"><h5>${names[k]}</h5><div class="cnt">${P[k]}</div><div class="blocks">${blocks(P,k)}</div>
+        <div class="pbtns"><button class="sbtn" data-a="deal" data-p="${k}" ${P[k]?"":"disabled"}>وزّع</button>${k!=="o"?`<button class="sbtn brk" data-a="brk" data-p="${k}" ${P[k]?"":"disabled"}>فكّ واحدة</button>`:""}</div></div>`).join("");
+      $("#grps").innerHTML=G.map((g,j)=>`<div class="grp ${anim?"fly":""}"><div class="blocks">${blocks(g,"h")}${blocks(g,"t")}${blocks(g,"o")}</div><div class="gl">${g.h*100+g.t*10+g.o}</div></div>`).join("");
+      $$("[data-a]",st).forEach(b=>b.onclick=()=>act(b.dataset.a,b.dataset.p));
+    }
+    function act(a,k){
+      if(a==="brk"){const nk=k==="h"?"t":"o";P[k]--;P[nk]+=10;SFX.tap();toast(k==="h"?"فكّكت مئة إلى 10 عشرات":"فكّكت عشرة إلى 10 آحاد");draw();check();return;}
+      if(P[k]<d){toast(k==="o"?"لا تكفي الآحاد لكلّ المجموعات":`لا يكفي لكلّ مجموعة. فكّك واحدة من ${names[k]}`,"bad");SFX.bad();return;}
+      const each=Math.floor(P[k]/d);G.forEach(g=>g[k]+=each);P[k]-=each*d;SFX.pop();draw(true);check();
+    }
+    function check(){
+      if(P.h===0&&P.t===0&&P.o<d&&!$("#fin").innerHTML){
+        $$(".sbtn",st).forEach(b=>b.disabled=true);
+        $("#fin").innerHTML=`<div class="stepbar" style="margin-top:14px">انتهى التوزيع! ماذا تلاحظ؟</div>
+          <div class="eq">${n} ÷ ${d} = <span id="fq"></span> R <span id="fr"></span></div>${padHTML()}`;
+        Pad.field($("#fq"),{max:3,onEnter:f=>{if(Pad.value(f)===Q){Pad.good(f);SFX.step();Pad.next();}else{Pad.wrong(f);api.miss("كم يوجد في كلّ مجموعة؟");}}});
+        Pad.field($("#fr"),{max:2,onEnter:f=>{if(Pad.value(f)===R){Pad.good(f);api.win(`${n} ÷ ${d} = ${Q}${R?" R"+R:""} 🎉`);}else{Pad.wrong(f);api.miss("كم بقي من الآحاد دون توزيع؟");}}});
+        Pad.next();api.step("وزّعت كلّ ما يمكن توزيعه!");
+      }
+    }
+    draw();
+  }});
+
+/* ---------- 5-8 long division ---------- */
+GAMES.push({id:"g58",unit:5,lesson:"5-8",title:"القسمة على عدد من رقم واحد",game:"تسلّق القسمة المطوّلة",icon:"🧗",rounds:5,
+  intro:"اقسم المئات ثم العشرات ثم الآحاد: اقسم، اضرب، اطرح، أنزل الرقم التالي.",
+  setup(){const L=[[477,3],[42,3],[257,5],[82,5],[659,7],[78,3],[86,3],[417,8],[93,4],[526,8],[88,7],[761,3],[96,6],[957,3],[334,4],[148,6],[948,7],[179,4],[125,5],[418,8],[587,2],[747,8],[232,2],[685,5],[784,7]];this.deck=shuffle([...pick(L.filter(x=>x[0]<100),1),...pick(L.filter(x=>x[0]>=100),4)]);},
+  play(st,i){
+    const [n,d]=this.deck[i];const D=String(n),L=D.length;const W=L+2;
+    let p=0;while(p<L-1&&+D.slice(0,p+1)<d)p++;
+    let cur=+D.slice(0,p+1);
+    const qd={};const rows=[];// rows: {s,end,cls}
+    let stage="q",f=null,qv,prod,diff,done=false;
+    st.innerHTML=`<div class="task">أوجد ناتج ${m(n+" ÷ "+d)}</div><div class="row"><div class="col" style="text-align:center"><div id="dg"></div></div><div class="col"><div class="stepbar" id="sb"></div><div id="ar"></div></div></div>`;
+    const placeName=k=>["الآحاد","العشرات","المئات"][L-1-k]||"";
+    function newField(len,onOk){f=Pad.field(null,{max:len,render:draw,onEnter:x=>{const v=Pad.value(x);if(onOk(v)){Pad.good(x);}else{Pad.wrong(x);api.miss();}}});f.len=len;Pad.focus(f);}
+    function ask(){
+      qv=Math.floor(cur/d);prod=qv*d;diff=cur-prod;
+      if(stage==="q"){bar(`اقسم: ${m(cur+" ÷ "+d)} — اكتب الرقم في منزلة ${placeName(p)}`);newField(1,v=>{if(v===qv){qd[p]=String(qv);stage="m";f=null;SFX.step();setTimeout(ask,10);return true;}return false;});}
+      else if(stage==="m"){bar(`اضرب: ${m(qv+" × "+d)}`);newField(String(prod).length,v=>{if(v===prod){rows.push({s:String(prod),end:p,minus:true});stage="s";f=null;SFX.step();setTimeout(ask,10);return true;}return false;});}
+      else if(stage==="s"){bar(`اطرح: ${m(cur+" − "+prod)}`);newField(String(diff).length,v=>{if(v===diff){rows.push({s:String(diff),end:p,line:true});SFX.step();f=null;
+          if(p<L-1){stage="b";setTimeout(ask,10);}else{finish();}return true;}return false;});}
+      else if(stage==="b"){f=null;Pad.focus(null);bar(`أنزل الرقم التالي ${m(D[p+1])}`);$("#ar").innerHTML=`<div style="text-align:center"><button class="btn alt" id="bd">⬇️ أنزل ${D[p+1]}</button></div>`;
+        $("#bd").onclick=()=>{const last=rows[rows.length-1];last.s=last.s+D[p+1];last.brought=true;p++;cur=+last.s;last.end=p;stage="q";SFX.tap();
+          $("#ar").innerHTML=padHTML();ask();};draw();return;}
+      draw();
+    }
+    function bar(t){$("#sb").innerHTML=t;if(!$("#ar .pad"))$("#ar").innerHTML=padHTML();}
+    function finish(){done=true;f=null;Pad.focus(null);const Q=Math.floor(n/d),R=n%d;draw();$("#ar").innerHTML="";
+      bar(`${m(n+" ÷ "+d+" = "+Q+(R?" R"+R:""))}`);$("#ar").innerHTML=`<div class="hint">تحقّق: ${m(Q+" × "+d+(R?" + "+R:"")+" = "+n)} ✔</div>`;api.win(`${n} ÷ ${d} = ${Q}${R?" R"+R:""} 🎉`);}
+    function draw(){const g=$("#dg");if(!g)return;let h="";
+      const C=k=>k+1;// dividend digit k at column k+1 (col 0 = divisor)
+      // quotient row
+      for(let c=0;c<W;c++){const k=c-1;let inner="";
+        if(k>=0&&k<L){if(qd[k]!==undefined)inner=`<span class="ok">${qd[k]}</span>`;else if(f&&stage==="q"&&k===p)inner=box(f,0);}
+        if(c===W-1&&done&&n%d)inner=`<span class="rem">R${n%d}</span>`;
+        h+=`<div class="c">${inner}</div>`;}
+      // dividend row
+      for(let c=0;c<W;c++){const k=c-1;h+=c===0?`<div class="c">${d}</div>`:k<L?`<div class="c ${k===0?"brkl":"brk"}">${D[k]}</div>`:`<div class="c"></div>`;}
+      // work rows
+      const work=[...rows];if(f&&(stage==="m"||stage==="s"))work.push({input:true,len:f.len,end:p,minus:stage==="m",line:stage==="s"});
+      work.forEach(r=>{const len=r.input?r.len:r.s.length;const start=r.end-len+1;
+        for(let c=0;c<W;c++){const k=c-1;let inner="",cl="";
+          if(k>=start&&k<=r.end){const j=k-start;inner=r.input?box(f,j):`<span class="${r.brought&&j===len-1?"new":""}">${r.s[j]}</span>`;if(r.line)cl="ln";}
+          else if(r.minus&&k===start-1)inner="−";
+          if(r.line&&k>=start&&k<=r.end)cl="ln";
+          h+=`<div class="c ${cl}">${inner}</div>`;}});
+      g.innerHTML=`<div class="dg" style="grid-template-columns:repeat(${W},auto)">${h}</div>`;}
+    function box(f,j){const ch=f.val[j]||"";const on=Pad.active===f&&j===Math.min(f.val.length,f.len-1);return `<div class="bx ${on?"on":""}">${ch}</div>`;}
+    $("#ar").innerHTML=padHTML();ask();
+  }});
+
+/* ================= screens ================= */
+const UNITS={4:{name:"الوحدة 4",t:"استعمال الطرائق والخواص للضرب في عدد من رقمين",c:"var(--green)"},5:{name:"الوحدة 5",t:"استعمال الطرائق والخواص للقسمة على عدد من رقم واحد",c:"var(--maroon)"}};
+function home(){
+  RUN=null;Pad.reset();
+  $("#app").innerHTML=`<header class="hero"><div><div class="eyebrow">المستوى الرابع · الفصل الدراسي الأول · الجزء B</div><h1>ألعاب الرياضيات</h1>
+      <p>عشر ألعاب تفاعلية للضرب والقسمة. اختر درسًا وابدأ اللعب!</p></div>
+      <div class="ops" aria-hidden="true"><span>×</span><span>÷</span><span>+</span><span>−</span></div></header>
+    ${[4,5].map(u=>`<section class="unit" style="--u:${UNITS[u].c}"><div class="unit-h"><span class="tag">${UNITS[u].name}</span><span class="t">${UNITS[u].t}</span></div>
+      <div class="cards">${GAMES.filter(g=>g.unit===u).map(g=>`<button class="lcard" data-id="${g.id}"><div class="top"><span class="lbadge">الدرس <span class="num">${g.lesson}</span></span><span class="licon">${g.icon}</span></div>
+        <div class="ltitle">${g.title}</div><div class="lgame"><span>🎮 ${g.game}</span>${starsHTML(store(g.id)||0)}</div></button>`).join("")}</div></section>`).join("")}`;
+  $$(".lcard").forEach(c=>c.onclick=()=>start(GAMES.find(g=>g.id===c.dataset.id)));
+  scrollTo(0,0);
+}
+function start(g){
+  RUN={g,i:0,perfect:0,miss:0,done:false,res:[]};g.setup();
+  $("#app").innerHTML=`<div style="--u:${UNITS[g.unit].c}"><div class="gtop"><button class="back" id="bk">→ الدروس</button>
+      <div class="gtitle"><span class="gn">${g.icon} ${g.game}</span><span class="lt">الدرس <span class="num">${g.lesson}</span>: ${g.title}</span></div>
+      <button class="mute" id="mu" aria-label="الصوت">${muted?"🔇":"🔊"}</button></div>
+    <div class="prog" id="prog"></div><div id="stage"></div></div>`;
+  $("#bk").onclick=home;$("#mu").onclick=e=>{muted=!muted;e.currentTarget.textContent=muted?"🔇":"🔊";};
+  toast(g.intro);playRound();scrollTo(0,0);
+}
+function drawProg(){const p=$("#prog");if(!p||!RUN)return;p.innerHTML=Array.from({length:RUN.g.rounds},(_,k)=>`<i class="${RUN.res[k]||(k===RUN.i?"cur":"")}"></i>`).join("");}
+function playRound(){RUN.miss=0;RUN.done=false;Pad.reset();drawProg();const st=$("#stage");st.innerHTML="";RUN.g.play(st,RUN.i);}
+function nextRound(){RUN.i++;if(RUN.i>=RUN.g.rounds)end();else playRound();}
+function end(){
+  const g=RUN.g,r=RUN.perfect/g.rounds,s=r>=.85?3:r>=.5?2:1;const best=store(g.id)||0;if(s>best)store(g.id,s);
+  SFX.win();burst(140);drawProg();
+  $("#stage").innerHTML=`<div class="end"><div class="big">${s===3?"أداء رائع!":s===2?"عمل جيّد!":"أحسنت المحاولة!"}</div>${starsHTML(s)}
+    <p style="font-size:19px;font-weight:700;margin:0">أجبت عن <span class="num">${RUN.perfect}</span> من <span class="num">${g.rounds}</span> من المحاولة الأولى.</p>
+    <div class="bt"><button class="btn" id="ag">🔁 العب مرة أخرى</button><button class="btn alt" id="hm">📚 الدروس</button></div></div>`;
+  $("#ag").onclick=()=>start(g);$("#hm").onclick=home;
+}
+window.__G={GAMES,start,home,Pad,get RUN(){return RUN;}};
+home();
+})();
+</script>
+
+</body>
+</html>

@@ -141,6 +141,17 @@ button:focus-visible,.fld:focus-visible{outline:3px solid var(--sky);outline-off
 .vl{top:-6px;bottom:-6px;width:4px;margin-left:-2px}
 .hl{left:-6px;right:-6px;height:4px;margin-top:-2px}
 .reg{position:absolute;display:flex;align-items:center;justify-content:center;font-family:var(--num);font-weight:700;font-size:13px;color:var(--ink);opacity:.85;pointer-events:none;overflow:hidden;text-align:center}
+.crn{position:absolute;width:18px;height:18px;display:grid;place-items:center;font:700 22px/1 var(--num);color:#6A1BB8;pointer-events:none;z-index:2}
+.crn.tl{left:-21px;top:-21px}.crn.tr{right:-21px;top:-21px}.crn.bl{left:-21px;bottom:-21px}.crn.br{right:-21px;bottom:-21px}
+.rsel{position:absolute;transform:translate(-50%,-50%);z-index:3;height:28px;padding:0 2px;border-radius:9px;border:2px solid var(--maroon);background:#fff;color:var(--ink);font:700 14px var(--num);direction:ltr;cursor:pointer;box-shadow:0 2px 0 rgba(27,42,78,.18)}
+.rsel.shake{animation:shakeS .4s}
+@keyframes shakeS{0%,100%{transform:translate(-50%,-50%)}20%,60%{transform:translate(calc(-50% - 7px),-50%)}40%,80%{transform:translate(calc(-50% + 7px),-50%)}}
+.rsel:focus-visible{outline:3px solid var(--sky);outline-offset:1px}
+.dpanel{margin-top:14px;border:3px solid #E3EAF3;border-radius:18px;padding:12px 14px;opacity:.6;transition:opacity .2s,border-color .2s}
+.dpanel.act{opacity:1;border-color:var(--green);box-shadow:0 0 0 4px rgba(59,169,53,.15)}
+.dhead{font-weight:800;font-size:19px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;direction:rtl}
+.dstep{font-weight:800;font-size:15px;color:var(--maroon);direction:rtl;text-align:right;margin-top:4px}
+.dist .dl .fld{min-width:58px;height:44px;font-size:22px}
 .pp{display:flex;align-items:center;gap:8px;margin:6px 0;flex-wrap:wrap;direction:ltr;justify-content:flex-end}
 .pp .chip{width:18px;height:18px;border-radius:5px;flex:none}
 .pp .m{font-size:22px;font-weight:700}
@@ -270,6 +281,20 @@ button:focus-visible,.fld:focus-visible{outline:3px solid var(--sky);outline-off
   .dg .c{width:38px;height:44px}.dg .bx{width:33px;height:38px}.dg{font-size:26px}
   .slot{width:48px;height:42px;font-size:20px}.dl{font-size:21px}
 }
+@media (max-width:720px){
+ #app{padding-block:10px 24px}
+ .gtop{gap:8px;margin-bottom:8px}.back{padding:6px 10px;font-size:15px}.mute{width:38px;height:38px;font-size:17px}
+ .gtitle .gn{font-size:22px}.gtitle .lt{font-size:13px}
+ .prog{margin-bottom:8px}.prog i{height:7px}
+ #stage{min-height:0}
+ .task{font-size:17px;margin-bottom:8px}
+ #side{order:-1}
+ .stepbar{font-size:16px;padding:6px 10px;margin-bottom:6px}
+ .pad{gap:6px;margin-top:10px}.pad button{height:46px;font-size:23px}
+ .fld{height:42px;font-size:22px;min-width:56px}
+ #toast{top:calc(10px + env(safe-area-inset-top,0px));bottom:auto;transform:translate(-50%,-180%);font-size:16px;padding:8px 16px;border-radius:14px}
+ #toast.show{transform:translate(-50%,0)}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -391,35 +416,28 @@ GAMES.push({id:"g41",unit:4,lesson:"4-1",title:"الحساب الذهني: ال�
     });
   }});
 
-/* ---------- 4-5 grid / partial products ---------- */
-GAMES.push({id:"g45",unit:4,lesson:"4-5",title:"الشبكات ونواتج الضرب الجزئية",game:"مهندس الشبكات",icon:"🟪",rounds:4,
-  intro:"قسّم الشبكة إلى عشرات وآحاد، ثم أوجد نواتج الضرب الجزئية واجمعها.",
-  setup(){
-    const L=[[24,13,"توجد 24 صفًّا من الدببة، في كلّ صفّ 13 دبًّا."],[14,23,"يحتوي مسرح على 14 صفًّا من المقاعد، وفي كلّ صفّ 23 مقعدًا."],[13,14,"لوحة بالونات: 13 بالونًا رأسيًّا و14 بالونًا أفقيًّا."],[17,14,"يحتوي مسرح على 17 صفًّا من المقاعد، في كلّ صفّ 14 مقعدًا."],[22,14,"يتمرّن لاعب كرة قدم 22 ساعة كلّ أسبوع لمدة 14 أسبوعًا."],
-      [24,16,""],[14,21,""],[14,12,""],[18,18,""],[15,13,""],[26,18,""],[23,23,""],[19,27,""],[11,16,""],[12,24,""],[12,18,""]];
-    this.deck=[...pick(L.slice(0,5),2),...pick(L.slice(5),2)];this.deck=shuffle(this.deck);
-  },
-  play(st,i){
-    const [a,b,story]=this.deck[i];const ta=tens(a),tb=tens(b);
-    st.innerHTML=`<div class="task">${story} استعمل الشبكة لإيجاد ${m(a+" × "+b)}</div>
+/* ---------- shared area model (4-5, 4-6) ---------- */
+function gridModel(st,a,b,task,onDone,extra){
+    const ta=tens(a),tb=tens(b);
+    st.innerHTML=`<div class="task">${task}</div>
       <div class="row"><div class="col" style="text-align:center">
-        <div class="gridbox"><div class="collabs" id="cl"></div><div class="rowwrap"><div class="rowlabs" id="rl"></div><div class="grid" id="gr"><div id="regs"></div><div class="vl" id="vl"></div><div class="hl" id="hl"></div></div></div></div>
-      </div><div class="col" id="side"></div></div>`;
-    const gr=$("#gr"),avail=st.clientWidth>720?st.clientWidth/2-80:st.clientWidth-80;
-    const cs=Math.max(8,Math.min(20,Math.floor(Math.min(avail/b,330/a))));
+        <div class="gridbox"><div class="collabs" id="cl"></div><div class="rowwrap"><div class="rowlabs" id="rl"></div><div class="grid" id="gr"><div id="regs"></div><div class="vl" id="vl"></div><div class="hl" id="hl"></div><div id="sels"></div><span class="crn tl" aria-hidden="true">×</span><span class="crn tr" aria-hidden="true">×</span><span class="crn bl" aria-hidden="true">×</span><span class="crn br" aria-hidden="true">×</span></div><div class="rowlabs" id="rr"></div></div><div class="collabs" id="cb"></div></div>
+      </div><div class="col" id="side"></div></div>${extra||""}`;
+    const gr=$("#gr"),avail=st.clientWidth>720?st.clientWidth/2-114:st.clientWidth-114;
+    const maxH=innerWidth<=720?Math.max(170,Math.min(330,innerHeight*.34)):330;const cs=Math.max(7,Math.min(20,Math.floor(Math.min(avail/b,maxH/a))));
     gr.style.width=b*cs+"px";gr.style.height=a*cs+"px";
     gr.style.backgroundImage=`linear-gradient(#C9D6E6 1px,transparent 1px),linear-gradient(90deg,#C9D6E6 1px,transparent 1px)`;gr.style.backgroundSize=`${cs}px ${cs}px`;
-    const S={ph:"v",col:null,row:null};const side=$("#side");
-    const labC=()=>{$("#cl").innerHTML=S.col==null?`<span style="width:${b*cs}px">${b}</span>`:`<span style="width:${S.col*cs}px">${S.col}</span><span style="width:${(b-S.col)*cs}px">${b-S.col}</span>`;};
-    const labR=()=>{$("#rl").innerHTML=S.row==null?`<span style="height:${a*cs}px">${a}</span>`:`<span style="height:${S.row*cs}px">${S.row}</span><span style="height:${(a-S.row)*cs}px">${a-S.row}</span>`;};
+    const S={ph:"h",col:null,row:null};const side=$("#side");
+    const labC=()=>{const h=S.col==null?`<span style="width:${b*cs}px">${b}</span>`:`<span style="width:${S.col*cs}px">${S.col}</span><span style="width:${(b-S.col)*cs}px">${b-S.col}</span>`;$("#cl").innerHTML=h;$("#cb").innerHTML=h;};
+    const labR=()=>{const h=S.row==null?`<span style="height:${a*cs}px">${a}</span>`:`<span style="height:${S.row*cs}px">${S.row}</span><span style="height:${(a-S.row)*cs}px">${a-S.row}</span>`;$("#rl").innerHTML=h;$("#rr").innerHTML=h;};
     labC();labR();
-    const phaseV=()=>{side.innerHTML=`<div class="stepbar">الخطوة 1: اقسم ${m(b)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا رأسيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
-    const phaseH=()=>{side.innerHTML=`<div class="stepbar">الخطوة 2: اقسم ${m(a)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا أفقيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
+    const phaseV=()=>{side.innerHTML=`<div class="stepbar">الخطوة 2: اقسم ${m(b)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا رأسيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
+    const phaseH=()=>{side.innerHTML=`<div class="stepbar">الخطوة 1: اقسم ${m(a)} إلى عشرات وآحاد</div><p>اضغط على الشبكة لتضع <b>خطًّا أفقيًّا</b> يفصل العشرات عن الآحاد.</p><button class="btn" id="cf">تأكيد</button>`;$("#cf").onclick=confirm;};
     function confirm(){
       if(S.ph==="v"){if(S.col==null){toast("اضغط على الشبكة أولًا");return;}
-        if(S.col===tb||b-S.col===tb){api.step("صحيح! "+b+" = "+tb+" + "+(b-tb));S.ph="h";phaseH();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
+        if(S.col===tb||b-S.col===tb){api.step("صحيح! "+b+" = "+tb+" + "+(b-tb));S.ph="p";phaseP();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
       else if(S.ph==="h"){if(S.row==null){toast("اضغط على الشبكة أولًا");return;}
-        if(S.row===ta||a-S.row===ta){api.step("صحيح! "+a+" = "+ta+" + "+(a-ta));S.ph="p";phaseP();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
+        if(S.row===ta||a-S.row===ta){api.step("صحيح! "+a+" = "+ta+" + "+(a-ta));S.ph="v";phaseV();}else api.miss("الخط يجب أن يفصل العشرات عن الآحاد");}
     }
     gr.addEventListener("click",e=>{const r=gr.getBoundingClientRect();
       if(S.ph==="v"){const c=Math.round((e.clientX-r.left)/cs);S.col=Math.min(b-1,Math.max(1,c));const vl=$("#vl");vl.style.display="block";vl.style.left=S.col*cs+"px";labC();SFX.tap();}
@@ -427,59 +445,97 @@ GAMES.push({id:"g45",unit:4,lesson:"4-5",title:"الشبكات ونواتج ال
     function phaseP(){
       const L=S.col,R=b-S.col,T=S.row,B=a-S.row;
       const regs=[{r:T,c:L,x:0,y:0,col:"var(--pink)"},{r:T,c:R,x:L,y:0,col:"var(--lilac)"},{r:B,c:L,x:0,y:T,col:"var(--aqua)"},{r:B,c:R,x:L,y:T,col:"var(--lime)"}];
-      $("#regs").innerHTML=regs.map(g=>`<div class="reg" style="left:${g.x*cs}px;top:${g.y*cs}px;width:${g.c*cs}px;height:${g.r*cs}px;background:${g.col}">${g.c*cs>50&&g.r*cs>22?g.r+"×"+g.c:""}</div>`).join("");
-      side.innerHTML=`<div class="stepbar">الخطوة 3: أوجد نواتج الضرب الجزئية</div>`+regs.map((g,j)=>`<div class="pp"><span class="m">${g.r} × ${g.c} =</span><span id="pf${j}"></span><span class="chip" style="background:${g.col}"></span></div>`).join("")+padHTML();
+      const ex=g=>g.r+" × "+g.c;
+      const opts=shuffle(regs.map(ex));
+      $("#regs").innerHTML=regs.map(g=>`<div class="reg" style="left:${g.x*cs}px;top:${g.y*cs}px;width:${g.c*cs}px;height:${g.r*cs}px;background:${g.col}"></div>`).join("");
+      $("#sels").innerHTML=regs.map((g,j)=>`<select class="rsel" data-j="${j}" aria-label="عملية الضرب للجزء ${j+1}" style="left:${(g.x+g.c/2)*cs}px;top:${(g.y+g.r/2)*cs}px;width:${Math.max(40,Math.min(78,g.c*cs-4))}px;min-width:0"><option value="">${g.c*cs>=74?"اختر ▾":"؟"}</option>${opts.map(o=>`<option value="${o}">${o}</option>`).join("")}</select>`).join("");
+      side.innerHTML=`<div class="stepbar">الخطوة 3: اختر عملية الضرب لكلّ جزء</div><p>انظر إلى القياسين على جانبَي كلّ جزء، ثم اختر من القائمة داخل الجزء <b>عملية الضرب</b> المناسبة له.</p>`;
+      let done=0;
+      $$("#sels select").forEach(sel=>{
+        sel.addEventListener("change",()=>{
+          const g=regs[+sel.dataset.j];if(!sel.value)return;
+          if(sel.value===ex(g)){
+            const reg=$("#regs").children[+sel.dataset.j];
+            reg.innerHTML=`<span class="m">${g.r}×${g.c}</span>`;sel.remove();SFX.step();
+            if(++done===4){api.step("ممتاز! حدّدت العمليات الأربع");phaseQ(regs);}
+          }else{sel.value="";shake(sel);api.miss("راجع القياسين على جانبَي هذا الجزء");}
+        });
+      });
+    }
+    function phaseQ(regs){
+      side.innerHTML=`<div class="stepbar">الخطوة 4: أوجد نواتج الضرب الجزئية</div>`+regs.map((g,j)=>`<div class="pp"><span class="m">${g.r} × ${g.c} =</span><span id="pf${j}"></span><span class="chip" style="background:${g.col}"></span></div>`).join("")+padHTML();
       regs.forEach((g,j)=>Pad.field($("#pf"+j),{max:4,onEnter:f=>{if(Pad.value(f)===g.r*g.c){Pad.good(f);SFX.step();if(!Pad.next())phaseS(regs);}else{Pad.wrong(f);api.miss();}}}));
       Pad.next();
     }
     function phaseS(regs){
       const ps=regs.map(g=>g.r*g.c);
-      side.innerHTML=`<div class="stepbar">الخطوة 4: اجمع نواتج الضرب الجزئية</div><div style="text-align:center"><div class="vsum">${ps.map((p,j)=>`<div>${j===3?"+ ":""}${fmt(p)}</div>`).join("")}<div class="ln"></div><div><span id="sf"></span></div></div></div>`+padHTML();
-      Pad.field($("#sf"),{max:4,onEnter:f=>{if(Pad.value(f)===a*b){Pad.good(f);api.win(`${a} × ${b} = ${fmt(a*b)} 🎉`);}else{Pad.wrong(f);api.miss();}}});
+      side.innerHTML=`<div class="stepbar">الخطوة 5: اجمع نواتج الضرب الجزئية</div><div style="text-align:center"><div class="vsum">${ps.map((p,j)=>`<div>${j===3?"+ ":""}${fmt(p)}</div>`).join("")}<div class="ln"></div><div><span id="sf"></span></div></div></div>`+padHTML();
+      Pad.field($("#sf"),{max:4,onEnter:f=>{if(Pad.value(f)===a*b){Pad.good(f);onDone(side,regs);}else{Pad.wrong(f);api.miss();}}});
       Pad.next();
     }
-    phaseV();
+    phaseH();
+}
+
+/* ---------- 4-5 grid / partial products ---------- */
+GAMES.push({id:"g45",unit:4,lesson:"4-5",title:"الشبكات ونواتج الضرب الجزئية",game:"مهندس الشبكات",icon:"🟪",rounds:4,
+  intro:"قسّم الشبكة إلى عشرات وآحاد، ثم أوجد نواتج الضرب الجزئية واجمعها، وتحقّق بالتقدير.",
+  setup(){
+    const L=[[24,13,"توجد 24 صفًّا من الدببة، في كلّ صفّ 13 دبًّا."],[14,23,"يحتوي مسرح على 14 صفًّا من المقاعد، وفي كلّ صفّ 23 مقعدًا."],[13,14,"لوحة بالونات: 13 بالونًا رأسيًّا و14 بالونًا أفقيًّا."],[17,14,"يحتوي مسرح على 17 صفًّا من المقاعد، في كلّ صفّ 14 مقعدًا."],[22,14,"يتمرّن لاعب كرة قدم 22 ساعة كلّ أسبوع لمدة 14 أسبوعًا."],
+      [24,16,""],[14,21,""],[14,12,""],[18,18,""],[15,13,""],[26,18,""],[23,23,""],[19,27,""],[11,16,""],[12,24,""],[12,18,""]];
+    this.deck=[...pick(L.slice(0,5),2),...pick(L.slice(5),2)];this.deck=shuffle(this.deck);
+  },
+  play(st,i){
+    const [a,b,story]=this.deck[i];
+    gridModel(st,a,b,`${story} استعمل الشبكة لإيجاد ${m(a+" × "+b)}`,(side)=>{
+      const r=n=>Math.round(n/10)*10,E=r(a)*r(b);
+      const c=[E*10,E/10,(r(a)+10)*r(b),r(a)*(r(b)+10),(r(a)-10)*r(b)].filter(x=>Number.isInteger(x)&&x>0&&x!==E);
+      const opts=shuffle([E,...pick(uniq(c),3)]);
+      side.innerHTML=`<div class="stepbar">الخطوة 6: تحقّق بالتقدير</div><p>${m(a+" × "+b+" = "+fmt(a*b))}. قرّب كلّ عامل إلى أقرب 10. ما التقدير؟</p><div class="opts">${opts.map(o=>`<button class="opt" data-v="${o}">${fmt(o)}</button>`).join("")}</div>`;
+      $$(".opt",side).forEach(o=>o.onclick=()=>{if(+o.dataset.v===E){o.classList.add("yes");api.win(`${fmt(a*b)} قريب من ${fmt(E)}، الإجابة منطقية ✔`);}else{o.classList.add("no");api.miss("قرّب كلّ عامل إلى أقرب عشرة ثم اضرب");}});
+    });
   }});
 
 /* ---------- 4-6 distributive ---------- */
-GAMES.push({id:"g46",unit:4,lesson:"4-6",title:"الضرب باستعمال خاصية التوزيع",game:"بطاقات التوزيع",icon:"🧩",rounds:5,
-  intro:"اضغط على الخانة ثم على البطاقة المناسبة لتكمل خطوات خاصية التوزيع.",
-  setup(){const L=[[25,15],[23,24],[35,12],[18,25],[16,27],[41,12],[38,27],[58,19],[29,15],[73,47],[23,18],[14,19],[12,22],[21,51],[28,38],[51,12],[73,13],[99,11],[16,14],[17,38],[56,17],[11,13],[29,64],[24,18],[26,19],[28,17],[27,15]];this.deck=pick(L,5);},
+GAMES.push({id:"g46",unit:4,lesson:"4-6",title:"الضرب باستعمال خاصية التوزيع",game:"المساحة والتوزيع",icon:"🧩",rounds:5,
+  intro:"استعمل نموذج المساحة أولًا، ثم أكمل خطوات خاصية التوزيع خطوة خطوة.",
+  setup(){
+    const P=[[25,15,"يضمّ كلّ فريق من فرق البيسبول في أحد الأندية 15 لاعبًا، ويوجد 25 فريقًا في النادي. ما عدد اللاعبين في كلّ فرق النادي؟"],[13,15,""],[23,24,""],[16,12,""],[35,12,""],[41,12,""]];
+    const B=[[18,25],[16,27],[29,15],[23,18],[14,19],[12,22],[16,14],[11,13],[24,18],[26,19],[28,17],[27,15],[38,27],[29,15]];
+    this.deck=[...pick(P,3),...pick(B,2).map(x=>[x[0],x[1],""])];this.deck=shuffle(this.deck);
+  },
   play(st,i){
-    const [a,b]=this.deck[i];const A=[tens(a),a%10],B=[tens(b),b%10];
-    const sl=n=>Array.from({length:n},(_,k)=>k);
-    st.innerHTML=`<div class="task">استعمل خاصيّة التوزيع لإيجاد ${m(a+" × "+b)}</div>
-      <div class="dist">
-        <div class="dl" id="l1">${a} × ${b} = (<i class="slot" data-l="1"></i>+<i class="slot" data-l="1"></i>) × (<i class="slot" data-l="1"></i>+<i class="slot" data-l="1"></i>)<button class="btn" id="c1" style="margin-inline-start:8px">تحقّق</button></div>
-        <div class="dl" id="l2" hidden>= ${sl(4).map(k=>`(<i class="slot" data-l="2"></i>×<i class="slot" data-l="2"></i>)`).join(" + ")}<button class="btn" id="c2" style="margin-inline-start:8px">تحقّق</button></div>
-        <div class="dl" id="l3" hidden></div>
-        <div class="dl" id="l4" hidden></div>
-      </div>
-      <div class="tiles" id="tiles">${shuffle(uniq([...A,...B])).map(v=>`<button class="tile" data-v="${v}">${v}</button>`).join("")}</div>
-      <p class="sub" style="text-align:center">اضغط الخانة، ثم اضغط البطاقة.</p>`;
-    let sel=null;let line=1;
-    const slots=l=>$$(`.slot[data-l="${l}"]`,st);
-    const choose=s=>{$$(".slot",st).forEach(x=>x.classList.remove("sel"));sel=s;if(s)s.classList.add("sel");};
-    const nextEmpty=()=>slots(line).find(s=>!s.dataset.v);
-    $$(".slot",st).forEach(s=>s.onclick=()=>{if(+s.dataset.l===line)choose(s);});
-    $$(".tile",st).forEach(t=>t.onclick=()=>{if(!sel)choose(nextEmpty());if(!sel)return;sel.dataset.v=t.dataset.v;sel.textContent=t.dataset.v;sel.classList.add("f");SFX.tap();choose(nextEmpty()||null);});
-    choose(nextEmpty());
-    const vals=l=>slots(l).map(s=>s.dataset.v===undefined?null:+s.dataset.v);
-    const key=p=>[...p].sort((x,y)=>x-y).join(",");
-    $("#c1").onclick=()=>{const v=vals(1);if(v.includes(null)){toast("أكمل كلّ الخانات");return;}
-      const g1=key(v.slice(0,2)),g2=key(v.slice(2));
-      if((g1===key(A)&&g2===key(B))||(g1===key(B)&&g2===key(A))){slots(1).forEach(s=>{s.classList.add("ok");s.onclick=null;});$("#c1").remove();api.step("فكّكت العاملين بشكل صحيح!");line=2;$("#l2").hidden=false;choose(nextEmpty());}
-      else{api.miss("فكّك كلّ عامل إلى عشرات وآحاد");slots(1).forEach(s=>{delete s.dataset.v;s.textContent="";s.classList.remove("f");});choose(nextEmpty());}};
-    $("#c2").onclick=()=>{const v=vals(2);if(v.includes(null)){toast("أكمل كلّ الخانات");return;}
-      const pairs=[0,2,4,6].map(k=>key([v[k],v[k+1]])).sort();
-      const exp=[key([A[0],B[0]]),key([A[1],B[0]]),key([A[0],B[1]]),key([A[1],B[1]])].sort();
-      if(pairs.join("|")===exp.join("|")){slots(2).forEach(s=>{s.classList.add("ok");s.onclick=null;});$("#c2").remove();$("#tiles").hidden=true;$(".sub",st).hidden=true;api.step("ممتاز! هذه نواتج الضرب الجزئية الأربعة");
-        const ps=[0,2,4,6].map(k=>v[k]*v[k+1]);const l3=$("#l3");l3.hidden=false;l3.innerHTML="= "+ps.map(fmt).join(" + ");
-        const T=a*b,c=[T-A[1]*B[0]-A[0]*B[1],T+10,T-10,T+100,A[0]*B[0]+A[1]*B[1]+A[0]*B[1]];
-        const opts=shuffle([T,...pick(uniq(c.filter(x=>x>0&&x!==T)),3)]);
-        const l4=$("#l4");l4.hidden=false;l4.innerHTML=`= <div class="opts" style="margin:0">${opts.map(o=>`<button class="opt" data-v="${o}">${fmt(o)}</button>`).join("")}</div>`;
-        $$(".opt",l4).forEach(o=>o.onclick=()=>{if(+o.dataset.v===T){o.classList.add("yes");api.win(`${a} × ${b} = ${fmt(T)} 🎉`);}else{o.classList.add("no");api.miss();}});}
-      else{api.miss("اضرب كلّ جزء من العامل الأول في كلّ جزء من العامل الثاني");slots(2).forEach(s=>{delete s.dataset.v;s.textContent="";s.classList.remove("f");});choose(nextEmpty());}};
+    const [a,b,story]=this.deck[i];const A0=tens(a),A1=a%10,B0=tens(b),B1=b%10,T=a*b;
+    const extra=`<div class="dpanel" id="dp"><div class="dhead">② خاصية التوزيع <span class="sub" id="dlock">🔒 تبدأ بعد إكمال نموذج المساحة</span></div><div class="dist" id="dbody"></div><div id="dpad"></div></div>`;
+    gridModel(st,a,b,`${story?story+" ":""}استعمل نموذج مساحة ثم خاصية التوزيع لإيجاد ${m(a+" × "+b)}`,(side)=>{
+      side.innerHTML=`<div class="stepbar">① اكتمل نموذج المساحة 👏</div><p>${m(a+" × "+b+" = "+fmt(T))}</p><p>الآن أكمل خطوات خاصية التوزيع في الأسفل.</p>`;
+      api.step("اكتمل نموذج المساحة 👏 الآن خاصية التوزيع");startDist();
+    },extra);
+    const dbody=$("#dbody"),dp=$("#dp");
+    function startDist(){
+      dp.classList.add("act");$("#dlock").remove();
+      dbody.innerHTML=`<div class="stepbar">الخطوة 1: فكّك العددين إلى عشرات وآحاد (اضغط الخانة ثم البطاقة)</div><div class="dl" id="D1">${a} × ${b} = (<i class="slot"></i> + <i class="slot"></i>) × (<i class="slot"></i> + <i class="slot"></i>)<button class="btn" id="c1" style="margin-inline-start:8px">تحقّق</button></div><div class="tiles" id="tl">${shuffle([A0,A1,B0,B1]).map(v=>`<button class="tile" data-v="${v}">${v}</button>`).join("")}</div>`;
+      const slots=$$(".slot",dbody);let sel=null;
+      const choose=s=>{slots.forEach(x=>x.classList.remove("sel"));sel=s;if(s)s.classList.add("sel");};
+      const nextEmpty=()=>slots.find(s=>s.dataset.v===undefined);
+      slots.forEach(s=>s.onclick=()=>choose(s));
+      $$(".tile",dbody).forEach(t=>t.onclick=()=>{if(!sel)choose(nextEmpty());if(!sel)return;sel.dataset.v=t.dataset.v;sel.textContent=t.dataset.v;sel.classList.add("f");SFX.tap();choose(nextEmpty()||null);});
+      choose(nextEmpty());
+      const key=p=>[...p].sort((x,y)=>x-y).join(",");
+      $("#c1").onclick=()=>{const v=slots.map(s=>s.dataset.v===undefined?null:+s.dataset.v);if(v.includes(null)){toast("أكمل كلّ الخانات");return;}
+        if(key(v.slice(0,2))===key([A0,A1])&&key(v.slice(2))===key([B0,B1])){slots.forEach(s=>{s.classList.add("ok");s.onclick=null;});$("#tl").remove();$("#c1").remove();api.step("فكّكت العاملين بشكل صحيح!");lines();}
+        else{api.miss(`فكّك ${a} أولًا، ثم ${b}، كلًّا إلى عشرات وآحاد`);slots.forEach(s=>{delete s.dataset.v;s.textContent="";s.classList.remove("f");});choose(nextEmpty());}};
+    }
+    function lines(){
+      const L=[["الخطوة 2: وزّع العدد الثاني",[`= (${A0} + ${A1}) × `,B0,` + (${A0} + ${A1}) × `,B1]],
+        ["الخطوة 3: وزّع مرة أخرى",[`= (`,A0,` × ${B0}) + (`,A1,` × ${B0}) + (`,A0,` × ${B1}) + (`,A1,` × ${B1})`]],
+        ["الخطوة 4: أوجد نواتج الضرب الجزئية",[`= `,A0*B0,` + `,A1*B0,` + `,A0*B1,` + `,A1*B1]],
+        ["الخطوة 5: اجمع",[`= `,T]]];
+      dbody.insertAdjacentHTML("beforeend",L.map(([h,l],k)=>`<div id="L${k}" hidden><div class="dstep">${h}</div><div class="dl">${l.map(p=>typeof p==="number"?`<span class="fp" data-n="${p}"></span>`:p).join("")}</div></div>`).join(""));
+      $("#dpad").innerHTML=padHTML();let k=0;
+      const show=()=>{const el=$("#L"+k);el.hidden=false;
+        $$("span.fp",el).forEach(sp=>Pad.field(sp,{max:4,onEnter:f=>{if(Pad.value(f)===+sp.dataset.n){Pad.good(f);SFX.step();if(!Pad.next()){if(++k<L.length)show();else{$("#dpad").innerHTML="";api.win(`${a} × ${b} = ${fmt(T)} 🎉`);}}}else{Pad.wrong(f);api.miss();}}}));Pad.next();};
+      show();
+    }
   }});
 
 /* ---------- 4-8 memory ---------- */

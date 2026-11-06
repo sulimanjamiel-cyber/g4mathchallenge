@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="مغامرة جدول الضرب">
+<meta property="og:description" content="ألعاب تفاعلية لجداول الضرب من 1 إلى 10: الضرب جمع متكرّر، مستويات متدرّجة تُفتح بالتتابع">
+<meta property="og:type" content="website">
+<title>مغامرة جدول الضرب</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&family=Fredoka:wght@500;600;700&display=swap">
+<style>
+/* Layout: a playful trail map of 10 table "islands"; each island holds 4 short locked levels on a white play card */
+:root{
+  --paper:#FFF8EC; --dot:#F3E3C6; --card:#FFFFFF; --ink:#22264B; --ink2:#5B6085;
+  --green:#2FA84F; --green-d:#1E7D39; --coral:#F2665B; --coral-d:#C9473E; --sun:#FFC93C; --sun-d:#D9A21A;
+  --sky:#3A9BE8; --sky-d:#2272B5; --sky-l:#E3F1FD; --grape:#8457D6; --grape-l:#EFE7FC; --lock:#C9CDDC; --bad:#E0433A;
+  --shadow:0 3px 0 rgba(34,38,75,.12),0 12px 26px -14px rgba(34,38,75,.35);
+  --display:"Lalezar","Tajawal",system-ui,sans-serif; --body:"Tajawal",system-ui,sans-serif; --num:"Fredoka","Tajawal",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.6;
+  background-image:radial-gradient(var(--dot) 2px,transparent 2.5px);background-size:26px 26px}
+button,select{font:inherit;color:inherit;touch-action:manipulation}button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,select:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.m{font-family:var(--num);direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-weight:700}
+#app{max-width:980px;margin:0 auto;padding-block:16px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* home */
+.hero{background:var(--grape);color:#fff;border-radius:24px;padding:20px 24px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:relative;overflow:hidden}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,54px);line-height:1.1;margin:0}
+.hero p{margin:4px 0 0;font-weight:700;opacity:.95}
+.hero .big{font-family:var(--num);font-size:clamp(40px,8vw,70px);font-weight:700;margin-inline-start:auto;direction:ltr;opacity:.9}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin:12px 0}
+.tbtn{background:var(--card);border:0;border-radius:12px;padding:6px 12px;font-weight:800;font-size:15px;box-shadow:var(--shadow)}
+.tbtn.on{background:var(--sun)}
+.islands{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.isl{background:var(--card);border:3px solid transparent;border-radius:20px;padding:12px;box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;position:relative;min-width:0}
+.isl:hover:not(.locked){border-color:var(--c)}
+.isl .ic{font-size:40px;line-height:1.1}
+.isl .nm{font-family:var(--display);font-size:26px;color:var(--c);line-height:1}
+.isl .nm .m{font-family:var(--num)}
+.lv{display:flex;gap:5px}
+.lv i{width:22px;height:8px;border-radius:5px;background:#E6E8F0}
+.lv i.ok{background:var(--green)}
+.isl.locked{opacity:.55;filter:grayscale(.8)}
+.isl .lk{position:absolute;top:8px;inset-inline-start:10px;font-size:20px}
+.isl .dn{position:absolute;top:8px;inset-inline-start:10px;font-size:20px}
+
+/* table screen */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.back{background:var(--card);border:0;border-radius:14px;padding:8px 14px;font-weight:800;box-shadow:var(--shadow)}
+.ttl{flex:1;min-width:0;font-family:var(--display);font-size:30px;color:var(--c);line-height:1.15}
+.mute{background:var(--card);border:0;border-radius:14px;width:44px;height:44px;box-shadow:var(--shadow);font-size:20px}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.lvc{background:var(--card);border:3px solid transparent;border-radius:18px;padding:12px 10px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.lvc .i{font-size:34px}.lvc b{font-size:17px}.lvc span{font-size:13px;color:var(--ink2);font-weight:700}
+.lvc:hover:not(.locked){border-color:var(--c)}
+.lvc.locked{opacity:.5;filter:grayscale(1)}
+.lvc .st{color:var(--sun);font-size:18px;letter-spacing:2px}.lvc .st .o{color:#E2E4EC}
+.tbl{margin-top:16px;background:var(--card);border-radius:20px;padding:14px;box-shadow:var(--shadow)}
+.tbl h3{margin:0 0 8px;font-size:18px}
+.tg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;direction:ltr}
+.tg div{background:#F5F6FA;border-radius:10px;padding:4px;text-align:center;font-family:var(--num);font-weight:700;font-size:17px}
+.tg div.got{background:#E6F6EA;color:var(--green-d)}
+
+/* play */
+.prog{display:flex;gap:6px;margin-bottom:10px}
+.prog i{flex:1;height:10px;border-radius:6px;background:#E6E8F0}
+.prog i.ok{background:var(--green)}.prog i.cur{background:var(--sky)}
+#stage{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:18px;min-height:420px;position:relative}
+.task{font-size:21px;font-weight:800;margin:0 0 10px;text-wrap:balance}
+.task .m{color:var(--coral);font-size:1.15em}
+.say{background:var(--sky-l);border-radius:14px;padding:8px 14px;font-weight:700;margin:8px 0}
+.btn{background:var(--green);color:#fff;border:0;border-radius:14px;padding:10px 20px;font-weight:800;font-size:19px;box-shadow:0 4px 0 var(--green-d)}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--green-d)}
+.btn.alt{background:var(--sun);color:var(--ink);box-shadow:0 4px 0 var(--sun-d)}
+.btn.sky{background:var(--sky);box-shadow:0 4px 0 var(--sky-d)}
+.btn.red{background:var(--coral);box-shadow:0 4px 0 var(--coral-d)}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.center{text-align:center}
+.shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* groups */
+.groups{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0;min-height:90px;direction:ltr}
+.grp{border:3px dashed var(--c);border-radius:20px;padding:8px;display:grid;gap:2px;background:#FFFDF7;animation:pop .3s;position:relative;min-width:60px;min-height:60px}
+.grp.build{border-style:solid;background:var(--grape-l);cursor:pointer}
+.grp .it{font-size:26px;line-height:1.15;animation:pop .2s}
+.grp .gn{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:var(--c);color:#fff;border-radius:10px;padding:0 8px;font-family:var(--num);font-weight:700;font-size:14px}
+.sum{direction:ltr;text-align:center;font-family:var(--num);font-weight:700;font-size:clamp(22px,4.5vw,32px);min-height:46px;margin:6px 0}
+.sum .t{color:var(--green-d)}
+.choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;direction:ltr;margin-top:8px}
+.ch{width:90px;height:90px;border-radius:50%;border:0;font-family:var(--num);font-weight:700;font-size:30px;box-shadow:0 5px 0 rgba(0,0,0,.15);background:var(--c2,#FFD978)}
+.ch.no{opacity:.3;pointer-events:none}.ch.yes{outline:5px solid var(--green)}
+
+/* number line */
+.nl{width:100%;height:auto;display:block;margin:6px 0;direction:ltr}
+.hop{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;direction:ltr}
+.stone{min-width:76px;height:60px;border-radius:30px;border:0;background:#C9E7B8;font-family:var(--num);font-weight:700;font-size:26px;box-shadow:0 5px 0 #8EBF77}
+.stone.no{opacity:.3;pointer-events:none}
+
+/* array */
+.arr{display:inline-grid;gap:3px;direction:ltr;padding:8px;border-radius:14px;background:#F4F6FB;touch-action:manipulation;user-select:none}
+.cell{width:28px;height:28px;border-radius:8px;background:#fff;border:2px solid #DDE2EE;display:grid;place-items:center;font-size:16px;line-height:1}
+.cell.on{background:var(--grape-l);border-color:var(--grape)}
+.arrinfo{font-weight:800;font-size:19px;margin:6px 0}
+.rows{display:flex;flex-direction:column;gap:2px;font-family:var(--num);font-weight:700;color:var(--grape);direction:ltr;padding:8px 0}
+.rows span{height:31px;display:flex;align-items:center}
+select.dd{font-family:var(--num);font-weight:700;font-size:26px;border:3px solid #C9CFDF;border-radius:12px;padding:2px 8px;background:#FAFBFF;direction:ltr}
+select.dd.ok{border-color:var(--green);background:#E6F6EA}
+.eqrow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;direction:ltr;font-family:var(--num);font-weight:700;font-size:30px;margin:10px 0}
+
+/* challenge */
+.qbig{direction:ltr;text-align:center;font-family:var(--num);font-weight:700;font-size:clamp(34px,8vw,56px);background:var(--sky-l);border-radius:20px;padding:8px;margin:6px 0 12px;animation:pop .25s}
+.qbig .q{color:var(--coral)}
+.opts{display:flex;flex-direction:column;gap:10px;max-width:340px;margin:0 auto}
+.opt{display:flex;align-items:center;gap:12px;direction:ltr;border:3px solid #D5DAE8;background:#fff;border-radius:16px;padding:8px 16px;font-family:var(--num);font-weight:700;font-size:26px;text-align:left}
+.opt .L{flex:none;width:36px;height:36px;border-radius:10px;background:var(--sky-l);display:grid;place-items:center;font-size:20px}
+.opt.no{opacity:.3;pointer-events:none}.opt.yes{border-color:var(--green);background:#E6F6EA}
+
+/* end */
+.end{text-align:center;padding:24px 8px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.end .bt{font-family:var(--display);font-size:44px;color:var(--green-d);line-height:1.1}
+.end .stars{font-size:56px;letter-spacing:8px;color:var(--sun)}.end .stars .o{color:#E2E4EC}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(34,38,75,.45);display:grid;place-items:center;z-index:60;padding:16px}
+.modal[hidden]{display:none}
+.mbox{background:#fff;border-radius:20px;padding:18px;max-width:380px;text-align:center;box-shadow:var(--shadow)}
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translate(-50%,-180%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:16px;font-weight:800;font-size:19px;transition:transform .25s;z-index:70;max-width:calc(100% - 32px);text-align:center;box-shadow:var(--shadow)}
+#toast.show{transform:translate(-50%,0)}#toast.good{background:var(--green-d)}#toast.bad{background:var(--bad)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+@media (max-width:640px){
+ #app{padding-block:10px 24px}
+ .hero{padding:14px 16px;gap:6px;border-radius:20px}.hero h1{font-size:30px}.hero p{font-size:14px}.hero .big{font-size:30px;margin-inline-start:0}
+ .tools{margin:8px 0}.tbtn{font-size:13px;padding:5px 10px}
+ .islands{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .isl{padding:8px 6px;border-radius:16px;gap:2px}.isl .ic{font-size:30px}.isl .nm{font-size:21px}.lv i{width:16px;height:7px}
+ .isl .lk,.isl .dn{font-size:15px;top:5px}
+ .bar{gap:8px;margin-bottom:8px}.back{padding:6px 10px;font-size:15px}.mute{width:38px;height:38px;font-size:17px}.ttl{font-size:21px}
+ .lvc{padding:10px 6px}.lvc .i{font-size:28px}.lvc b{font-size:15px}.lvc span{font-size:12px}
+ .tg{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .say{font-size:15px;padding:6px 10px;margin:6px 0}
+ .groups{gap:8px 6px;margin:8px 0 12px}.grp{padding:5px;border-width:2px;border-radius:14px;min-width:44px;min-height:44px}.grp .it{font-size:17px}.grp .gn{font-size:12px;bottom:-10px}
+ .grp.build .it{font-size:24px}.grp.build{min-width:120px;min-height:70px}
+ .sum{font-size:21px}
+ #ctl{position:sticky;bottom:0;background:var(--card);padding:8px 0 calc(6px + env(safe-area-inset-bottom,0px));margin:0;z-index:5;gap:6px}
+ #ctl .btn{font-size:16px;padding:9px 12px}
+ .qbig{font-size:38px}.opt{font-size:22px;padding:6px 12px}.opt .L{width:30px;height:30px}
+ .eqrow{font-size:26px}select.dd{font-size:23px}
+ .end .bt{font-size:32px}.end .stars{font-size:44px}
+.levels{grid-template-columns:repeat(2,minmax(0,1fr))}.ttl{font-size:24px}.task{font-size:18px}#stage{padding:12px}
+ .ch{width:74px;height:74px;font-size:25px}.cell{width:24px;height:24px}.rows span{height:27px}.grp .it{font-size:21px}.stone{min-width:64px;height:52px;font-size:22px}.tg div{font-size:14px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<canvas id="fx"></canvas>
+<div class="modal" id="modal" hidden><div class="mbox"><p id="mtext" style="font-weight:800;font-size:19px;margin:0 0 12px"></p><div class="btns"><button class="btn" id="myes">نعم</button><button class="btn red" id="mno">لا</button></div></div></div>
+
+<script>
+(()=>{
+"use strict";
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=(a,k)=>shuffle(a).slice(0,k);const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const m=s=>`<span class="m">${s}</span>`;
+const ICON=["🍎","🐞","⭐","🐟","🌸","🚗","🍪","🎈","🐥","💎"];
+const COL=["#E2574C","#E08A1E","#C9A100","#2E9E5B","#1E9AA8","#2E7DD1","#5B5BD6","#8457D6","#C24FA3","#D23D6A"];
+const ITEM=["تفاحات","دعسوقات","نجوم","أسماك","زهرات","سيارات","كعكات","بالونات","كتاكيت","جواهر"];
+
+/* sound */
+let AC=null,muted=false;
+function tone(fs,d=.13,type="sine",gap=.09,v=.22){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime+.01;fs.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;const s=t0+i*gap;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(v,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d+.05);});}catch(e){}}
+const S={ok:()=>tone([660,880,1100]),step:()=>tone([780,1040],.1,"sine",.07,.16),bad:()=>tone([300,220],.2,"triangle",.13,.25),win:()=>tone([523,659,784,1047,1319],.2,"triangle",.11),tap:()=>tone([620],.05,"sine",.05,.1),hop:()=>tone([400,700],.08,"sine",.06,.15)};
+let tT;function toast(t,k=""){const el=$("#toast");el.className="show "+k;el.innerHTML=String(t).replace(/\d+(?:\s*[×+=]\s*(?:\d+|\?))+/g,x=>`<span class="m">${x}</span>`);clearTimeout(tT);tT=setTimeout(()=>el.className=k,1700);}
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;const cv=$("#fx"),cx=cv.getContext("2d");let parts=[],raf=null;
+function burst(n=60){if(RM)return;cv.width=innerWidth;cv.height=innerHeight;for(let i=0;i<n;i++)parts.push({x:innerWidth/2+(Math.random()-.5)*240,y:innerHeight*.35,vx:(Math.random()-.5)*12,vy:-Math.random()*12-4,s:6+Math.random()*7,c:COL[i%10],r:Math.random()*6,vr:(Math.random()-.5)*.4,l:90+Math.random()*40});if(!raf)loop();}
+function loop(){cx.clearRect(0,0,cv.width,cv.height);parts=parts.filter(p=>p.l-->0);parts.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.66);cx.restore();});raf=parts.length?requestAnimationFrame(loop):(cx.clearRect(0,0,cv.width,cv.height),null);}
+function shake(el){if(!el)return;el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");}
+function ask(text){return new Promise(res=>{const md=$("#modal");$("#mtext").textContent=text;md.hidden=false;$("#myes").onclick=()=>{md.hidden=true;res(true)};$("#mno").onclick=()=>{md.hidden=true;res(false)};});}
+
+/* progress (per viewer) */
+const KEY="mtables_v1";let P={};try{P=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){P={};}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}};
+const done=n=>(P[n]&&P[n].d)||0;const stars=(n,l)=>(P[n]&&P[n].s&&P[n].s[l])||0;
+let teacher=false;
+const tableOpen=n=>teacher||n===1||done(n-1)>=4;
+const levelOpen=(n,l)=>teacher||done(n)>=l-1;
+
+const LV=[
+ {i:"🧺",name:"ابنِ المجموعات",tip:"الضرب جمع متكرّر"},
+ {i:"🐸",name:"قفز الضفدع",tip:"العدّ بالقفز"},
+ {i:"🧱",name:"ابنِ المصفوفة",tip:"صفوف متساوية"},
+ {i:"🏆",name:"تحدّي الجدول",tip:"اختبر نفسك"},
+];
+const PRAISE=["أحسنت! 🌟","رائع! 👏","ممتاز! 🎉","بطل! 🏆","عمل جميل! 💜"],TRY=["حاول مرة أخرى 💪","فكّر مرة أخرى 🤔","قريب! جرّب من جديد"];
+
+/* ========== HOME ========== */
+function home(){
+  $("#app").innerHTML=`<header class="hero"><div><h1>مغامرة جدول الضرب</h1><p>ابنِ، اقفز، رتّب… وتعلّم أن الضرب جمع متكرّر! أكمل كلّ مستوى لتفتح الذي بعده.</p></div><div class="big">2 × 3 = 3 + 3</div></header>
+   <div class="tools"><button class="tbtn ${teacher?"on":""}" id="teach">${teacher?"🔓 وضع المعلم مفعّل":"🔒 وضع المعلم"}</button><button class="tbtn" id="reset">↺ ابدأ من جديد</button></div>
+   <div class="islands">${Array.from({length:10},(_,i)=>{const n=i+1,op=tableOpen(n),d=done(n);
+    return `<button class="isl ${op?"":"locked"}" style="--c:${COL[i]}" data-n="${n}" ${op?"":'aria-disabled="true"'}>${!op?'<span class="lk">🔒</span>':d>=4?'<span class="dn">✅</span>':""}<span class="ic">${ICON[i]}</span><span class="nm">جدول ${m(n)}</span><span class="lv">${[1,2,3,4].map(l=>`<i class="${d>=l?"ok":""}"></i>`).join("")}</span></button>`;}).join("")}</div>`;
+  $$(".isl").forEach(b=>b.onclick=()=>{const n=+b.dataset.n;if(!tableOpen(n)){S.bad();toast(`أكمل جدول ${n-1} أولًا 🔒`,"bad");shake(b);return;}tableScreen(n);});
+  $("#teach").onclick=async()=>{if(teacher){teacher=false;home();return;}if(await ask("تفعيل وضع المعلم يفتح كلّ الجداول والمستويات مؤقتًا. هل تريد المتابعة؟")){teacher=true;home();}};
+  $("#reset").onclick=async()=>{if(await ask("هل تريد مسح التقدّم والبدء من جدول 1؟")){P={};save();home();}};
+  scrollTo(0,0);
+}
+
+/* ========== TABLE SCREEN ========== */
+function tableScreen(n){
+  const c=COL[n-1];
+  $("#app").innerHTML=`<div class="bar" style="--c:${c}"><button class="back" id="bk">→ الجداول</button><div class="ttl">${ICON[n-1]} جدول ${m(n)}</div><button class="mute" id="mu">${muted?"🔇":"🔊"}</button></div>
+   <div class="levels" style="--c:${c}">${LV.map((L,k)=>{const l=k+1,op=levelOpen(n,l),s=stars(n,l);
+     return `<button class="lvc ${op?"":"locked"}" data-l="${l}"><span class="i">${op?L.i:"🔒"}</span><b>${l}. ${L.name}</b><span>${L.tip}</span><span class="st">${[1,2,3].map(j=>j<=s?"★":'<span class="o">★</span>').join("")}</span></button>`;}).join("")}</div>
+   <div class="tbl"><h3>جدول ${m(n)} الذي تعلّمته</h3><div class="tg">${Array.from({length:10},(_,i)=>{const k=i+1;const got=done(n)>=4;return `<div class="${got?"got":""}">${k} × ${n} = ${got?k*n:"?"}</div>`;}).join("")}</div></div>`;
+  $("#bk").onclick=home;$("#mu").onclick=e=>{muted=!muted;e.currentTarget.textContent=muted?"🔇":"🔊";};
+  $$(".lvc").forEach(b=>b.onclick=()=>{const l=+b.dataset.l;if(!levelOpen(n,l)){S.bad();toast("أكمل المستوى السابق أولًا 🔒","bad");shake(b);return;}play(n,l);});
+  scrollTo(0,0);
+}
+
+/* ========== LEVEL RUNNER ========== */
+let R=null;
+function play(n,l){
+  const c=COL[n-1];const L=LV[l-1];const items=makeItems(n,l);
+  R={n,l,items,i:0,miss:0};
+  $("#app").innerHTML=`<div class="bar" style="--c:${c}"><button class="back" id="bk">→ جدول ${m(n)}</button><div class="ttl">${L.i} ${L.name}</div><button class="mute" id="mu">${muted?"🔇":"🔊"}</button></div>
+   <div class="prog" id="prog"></div><div id="stage" style="--c:${c}"></div>`;
+  $("#bk").onclick=()=>tableScreen(n);$("#mu").onclick=e=>{muted=!muted;e.currentTarget.textContent=muted?"🔇":"🔊";};
+  next();
+}
+function drawProg(){$("#prog").innerHTML=R.items.map((_,k)=>`<i class="${k<R.i?"ok":k===R.i?"cur":""}"></i>`).join("");}
+function next(){drawProg();if(R.i>=R.items.length){finishLevel();return;}const st=$("#stage");st.innerHTML="";GAMES[R.l-1](st,R.n,R.items[R.i]);}
+function miss(el,msg){R.miss++;S.bad();toast(msg||rnd(TRY),"bad");shake(el);}
+function good(msg,delay=1200){S.ok();burst(35);toast(msg||rnd(PRAISE),"good");const tok=R;setTimeout(()=>{if(R===tok){R.i++;next();}},delay);}
+function finishLevel(){
+  const {n,l}=R;const s=R.miss===0?3:R.miss<=3?2:1;
+  P[n]=P[n]||{d:0,s:{}};P[n].d=Math.max(P[n].d,l);P[n].s[l]=Math.max(P[n].s[l]||0,s);save();
+  S.win();burst(140);
+  const last=l===4;const nextTable=n<10;
+  $("#stage").innerHTML=`<div class="end"><div class="bt">${last?`أتقنت جدول ${n}! 🏅`:"أكملت المستوى!"}</div><div class="stars">${[1,2,3].map(j=>j<=s?"★":'<span class="o">★</span>').join("")}</div>
+    ${last?`<div class="tg" style="max-width:520px;width:100%">${Array.from({length:10},(_,i)=>`<div class="got">${i+1} × ${n} = ${(i+1)*n}</div>`).join("")}</div>`:`<p style="font-weight:800;margin:0">فُتح المستوى التالي: ${LV[l].i} ${LV[l].name}</p>`}
+    <div class="btns">${last?(nextTable?`<button class="btn" id="go">إلى جدول ${n+1} ←</button>`:""):`<button class="btn" id="go">المستوى التالي ←</button>`}<button class="btn alt" id="again">🔁 أعد المستوى</button><button class="btn sky" id="tb">جدول ${n}</button></div></div>`;
+  const go=$("#go");if(go)go.onclick=()=>last?tableScreen(n+1):play(n,l+1);
+  $("#again").onclick=()=>play(n,l);$("#tb").onclick=()=>tableScreen(n);
+}
+
+/* items per level: short (3-5 tasks) */
+function makeItems(n,l){
+  if(l===1)return pick([2,3,4,5],3).sort((a,b)=>a-b);        // k groups of n
+  if(l===2)return pick([3,4,5,6,7],3).sort((a,b)=>a-b);      // k jumps of n
+  if(l===3)return pick([2,3,4,5,6],3).sort((a,b)=>a-b);      // k rows of n
+  const ks=pick([1,2,3,4,5,6,7,8,9,10],5);const types=shuffle(["prod","prod","miss","sum","prod"]);
+  return ks.map((k,i)=>({k,t:types[i]}));
+}
+function options(ans,n){const c=new Set([ans]);for(const v of shuffle([ans+n,ans-n,ans+1,ans-1,ans+2*n,ans+10,ans-10]))if(c.size<3&&v>0&&v!==ans)c.add(v);while(c.size<3)c.add(ans+c.size*3);return shuffle([...c]);}
+function choiceRow(host,ans,n,onOk){const cols=["#FFD978","#B9E3F7","#F7C3D3"];
+  host.innerHTML=`<div class="choices">${options(ans,n).map((v,i)=>`<button class="ch" style="--c2:${cols[i]}" data-v="${v}">${v}</button>`).join("")}</div>`;
+  $$(".ch",host).forEach(b=>b.onclick=()=>{if(+b.dataset.v===ans){b.classList.add("yes");onOk();}else{b.classList.add("no");miss(b);}});}
+
+/* ========== GAME 1: build groups (repeated addition) ========== */
+function g1(st,n,k){
+  const ic=ICON[n-1];const cols=Math.min(n,5);
+  st.innerHTML=`<div class="task">ابنِ ${m(k)} مجموعات، في كلّ مجموعة ${m(n)} ${ITEM[n-1]}.</div>
+   <div class="say" id="say">① اضغط داخل الصندوق لتضع ${m(n)} ${ITEM[n-1]} في المجموعة الأولى.</div>
+   <div class="groups" id="gs"></div><div class="sum" id="sum"></div>
+   <div class="btns" id="ctl"></div><div id="ans"></div>`;
+  const gs=$("#gs",st),sum=$("#sum",st),ctl=$("#ctl",st);let g=0,first=0;
+  const box=()=>{const d=document.createElement("div");d.className="grp";d.style.gridTemplateColumns=`repeat(${cols},auto)`;gs.appendChild(d);return d;};
+  const b0=box();b0.classList.add("build");b0.setAttribute("role","button");b0.innerHTML=`<span class="it" style="opacity:.25">${ic}</span>`;
+  const drawSum=()=>{sum.innerHTML=g?Array(g).fill(n).join(" + ")+(g>1?` = <span class="t">${g*n}</span>`:""):"";};
+  b0.onclick=()=>{if(first>=n){shake(b0);toast(`المجموعة فيها ${n} فقط`,"bad");return;}
+    if(first===0)b0.innerHTML="";first++;S.tap();b0.insertAdjacentHTML("beforeend",`<span class="it">${ic}</span>`);
+    if(first===n){b0.classList.remove("build");b0.onclick=null;b0.insertAdjacentHTML("beforeend",`<span class="gn">${n}</span>`);g=1;drawSum();S.step();
+      $("#say",st).innerHTML=`② رائع! الآن أضف مجموعات متساوية حتى يصبح عندك ${m(k)} مجموعات.`;controls();}};
+  function controls(){ctl.innerHTML=`<button class="btn sky" id="add">➕ أضف مجموعة</button><button class="btn red" id="rem">➖ احذف مجموعة</button><button class="btn" id="chk">✔ انتهيت</button>`;
+    $("#add",st).onclick=()=>{if(g>=10){toast("هذا كثير!","bad");return;}const d=box();d.innerHTML=Array(n).fill(`<span class="it">${ic}</span>`).join("")+`<span class="gn">${n}</span>`;g++;drawSum();S.tap();};
+    $("#rem",st).onclick=()=>{if(g<=1)return;gs.lastChild.remove();g--;drawSum();S.tap();};
+    $("#chk",st).onclick=()=>{if(g!==k){miss(gs,g<k?`نحتاج ${k} مجموعات، عندك ${g}`:`عندك ${g} مجموعات، نحتاج ${k} فقط`);return;}
+      ctl.innerHTML="";S.step();$("#say",st).innerHTML=`③ ${m(Array(k).fill(n).join(" + "))} — كم المجموع؟ إذن ${m(k+" × "+n+" = ?")}`;
+      sum.innerHTML=Array(k).fill(n).join(" + ")+" = ?";
+      choiceRow($("#ans",st),k*n,n,()=>{sum.innerHTML=`${Array(k).fill(n).join(" + ")} = <span class="t">${k*n}</span><br>${k} × ${n} = <span class="t">${k*n}</span>`;good(`${k} × ${n} = ${k*n}`,1500);});};}
+}
+
+/* ========== GAME 2: frog jumps on a number line ========== */
+function g2(st,n,k){
+  const max=n*k;let pos=0,j=0;
+  st.innerHTML=`<div class="task">يقفز الضفدع ${m(k)} قفزات، كلّ قفزة ${m(n)}. أين يصل؟</div>
+   <svg class="nl" id="nl" viewBox="0 0 1000 200" role="img" aria-label="خط الأعداد"></svg>
+   <div class="say" id="say"></div><div class="hop" id="hop"></div><div class="sum" id="sum"></div><div id="ans"></div>`;
+  const svg=$("#nl",st);const X=v=>40+v*(920/max);
+  function draw(){const f=Math.min(2.6,Math.max(1,1000/(svg.clientWidth||1000))),H=Math.round(100+95*f),y0=H-44*f;svg.setAttribute("viewBox",`0 0 1000 ${H}`);
+    let h=`<line x1="30" y1="${y0}" x2="970" y2="${y0}" stroke="#22264B" stroke-width="${4*f}"/>`;
+    const step=max<=20&&f<1.6?1:n;const T=(x,y,t,c,sz)=>`<text x="${x}" y="${y}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="${sz*f}" fill="${c}">${t}</text>`;
+    for(let v=0;v<=max;v+=step){const big=v%n===0;h+=`<line x1="${X(v)}" y1="${y0-(big?14:8)*f}" x2="${X(v)}" y2="${y0+(big?14:8)*f}" stroke="#22264B" stroke-width="${(big?3:2)*f}"/>`;}
+    h+=T(X(0),y0+38*f,0,"#22264B",24);
+    for(let t=1;t<=j;t++){const a=X((t-1)*n),b=X(t*n),mid=(a+b)/2;h+=`<path d="M${a} ${y0-10*f} Q ${mid} ${y0-100*f} ${b} ${y0-10*f}" fill="none" stroke="${COL[n-1]}" stroke-width="${4*f}" stroke-dasharray="${8*f} ${6*f}"/>`+T(mid,y0-62*f,"+"+n,COL[n-1],22)+T(b,y0+38*f,t*n,"#1E7D39",24);}
+    h+=`<text x="${X(pos)}" y="${y0-8*f}" text-anchor="middle" font-size="${40*f}">🐸</text>`;
+    svg.innerHTML=h;}
+  function ask1(){draw();$("#sum",st).innerHTML=j?Array(j).fill(n).join(" + ")+" = "+pos:"";
+    if(j===k){$("#say",st).innerHTML=`وصل الضفدع! ${m(k)} قفزات من ${m(n)}. إذن ${m(k+" × "+n+" = ?")}`;$("#hop",st).innerHTML="";
+      choiceRow($("#ans",st),max,n,()=>{$("#sum",st).innerHTML=`${Array(k).fill(n).join(" + ")} = ${max}<br>${k} × ${n} = ${max}`;good(`${k} × ${n} = ${max}`,1500);});return;}
+    $("#say",st).innerHTML=`الضفدع على ${m(pos)}. يقفز ${m(n)}. أين يهبط؟ (القفزة ${m(j+1)} من ${m(k)})`;
+    const ans=pos+n;const opts=new Set([ans]);for(const v of shuffle([ans+1,ans-1,pos+n+n,ans+2,ans-2,pos+1]))if(opts.size<3&&v>pos&&v!==ans)opts.add(v);
+    $("#hop",st).innerHTML=shuffle([...opts]).map(v=>`<button class="stone" data-v="${v}">${v}</button>`).join("");
+    $$(".stone",st).forEach(b=>b.onclick=()=>{if(+b.dataset.v===ans){pos=ans;j++;S.hop();ask1();}else{b.classList.add("no");miss(b,`${pos} + ${n} = ?`);}});}
+  ask1();
+}
+
+/* ========== GAME 3: build an array ========== */
+function g3(st,n,k){
+  const ic=ICON[n-1];const MR=Math.max(k,6),MC=Math.max(n,6)>10?10:Math.max(n,6);let r=0,c=0;
+  st.innerHTML=`<div class="task">ابنِ مصفوفة من ${m(k)} صفوف، في كلّ صفّ ${m(n)}.</div>
+   <div class="say" id="say">اضغط على مربّع ليصبح آخر مربّع في المصفوفة (عدد الصفوف وعدد ما في كلّ صفّ).</div>
+   <div class="center"><div style="display:inline-flex;gap:6px;align-items:flex-start;direction:ltr"><div class="arr" id="arr" style="grid-template-columns:repeat(${MC},auto)"></div><div class="rows" id="rows"></div></div></div>
+   <div class="arrinfo center" id="info"></div><div class="btns"><button class="btn" id="chk">✔ تحقّق</button></div><div id="ans"></div>`;
+  const arr=$("#arr",st);
+  arr.innerHTML=Array.from({length:MR*MC},(_,i)=>`<div class="cell" data-r="${Math.floor(i/MC)}" data-c="${i%MC}"></div>`).join("");
+  const paint=()=>{$$(".cell",arr).forEach(e=>{const on=+e.dataset.r<r&&+e.dataset.c<c;e.classList.toggle("on",on);e.textContent=on?ic:"";});
+    $("#info",st).innerHTML=r?`${m(r)} صفوف، في كلّ صفّ ${m(c)}`:"";};
+  arr.addEventListener("click",e=>{const t=e.target.closest(".cell");if(!t)return;r=+t.dataset.r+1;c=+t.dataset.c+1;S.tap();paint();});
+  $("#chk",st).onclick=()=>{if(!r){toast("اضغط على مربّع أولًا");return;}
+    if(r!==k||c!==n){miss(arr,r!==k&&c!==n?"راجع عدد الصفوف وعدد ما في كلّ صفّ":r!==k?`نحتاج ${k} صفوف`:`نحتاج ${n} في كلّ صفّ`);return;}
+    $("#chk",st).remove();arr.style.pointerEvents="none";S.step();
+    $$(".cell",arr).forEach(e=>{if(!e.classList.contains("on"))e.style.visibility="hidden";});
+    $("#rows",st).innerHTML=Array.from({length:MR},(_,i)=>`<span>${i<k?"+"+n:""}</span>`).join("").replace("+","");
+    $("#say",st).innerHTML=`كلّ صفّ فيه ${m(n)}. اجمع الصفوف: ${m(Array(k).fill(n).join(" + "))}`;
+    const opts=shuffle([k*n,k*n+n,Math.max(1,k*n-n),k+n].filter((v,i,a)=>a.indexOf(v)===i));
+    $("#ans",st).innerHTML=`<div class="eqrow">${k} × ${n} = <select class="dd" id="dd"><option value="">?</option>${opts.map(v=>`<option>${v}</option>`).join("")}</select></div>`;
+    $("#dd",st).onchange=e=>{const s=e.target;if(+s.value===k*n){s.className="dd ok";s.disabled=true;good(`${k} × ${n} = ${k*n}`,1400);}else{s.value="";miss(s);}};};
+}
+
+/* ========== GAME 4: challenge ========== */
+function g4(st,n,it){
+  const {k,t}=it;const P=k*n;let q,ans;
+  if(t==="prod"){q=`${k} × ${n} = <span class="q">?</span>`;ans=P;}
+  else if(t==="miss"){q=`<span class="q">?</span> × ${n} = ${P}`;ans=k;}
+  else{q=`${Array(Math.min(k,6)).fill(n).join(" + ")}${k>6?" + …":""}<br><span style="font-size:.7em">${k} مرّات = <span class="q">?</span></span>`;ans=P;}
+  const opts=t==="miss"?shuffle([...new Set([k,k+1,Math.max(1,k-1),k+2])]).slice(0,4):(()=>{const c=new Set([P]);for(const v of shuffle([P+n,P-n,P+1,P-1,P+2*n,P+10]))if(c.size<4&&v>0)c.add(v);return shuffle([...c]);})();
+  if(!opts.includes(ans)){opts[0]=ans;}
+  st.innerHTML=`<div class="task">${t==="miss"?"ما العدد المفقود؟":t==="sum"?"اكتب الجمع المتكرّر كضرب: ما الناتج؟":"ما ناتج الضرب؟"}</div>
+   <div class="qbig">${q}</div><div class="opts">${opts.map((v,i)=>`<button class="opt" data-v="${v}"><span class="L">${"ABCD"[i]}</span>${v}</button>`).join("")}</div>
+   <div class="center" style="margin-top:12px"><button class="btn alt" id="hint">💡 ارسمها</button></div><div class="groups" id="hg"></div>`;
+  $$(".opt",st).forEach(b=>b.onclick=()=>{if(+b.dataset.v===ans){b.classList.add("yes");good(`${k} × ${n} = ${P}`,1100);}else{b.classList.add("no");miss(b);}});
+  $("#hint",st).onclick=()=>{$("#hint",st).remove();const ic=ICON[n-1];
+    $("#hg",st).innerHTML=Array.from({length:k},()=>`<div class="grp" style="grid-template-columns:repeat(${Math.min(n,5)},auto)">${Array(n).fill(`<span class="it" style="font-size:18px">${ic}</span>`).join("")}<span class="gn">${n}</span></div>`).join("");};
+}
+const GAMES=[g1,g2,g3,g4];
+window.__T={get R(){return R},play,home,tableScreen,P:()=>P};
+home();
+})();
+</script>
+
+</body>
+</html>

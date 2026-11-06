@@ -192,9 +192,8 @@ function ask(text){return new Promise(res=>{const md=$("#modal");$("#mtext").tex
 const KEY="mtables_v1";let P={};try{P=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){P={};}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}};
 const done=n=>(P[n]&&P[n].d)||0;const stars=(n,l)=>(P[n]&&P[n].s&&P[n].s[l])||0;
-let teacher=false;
-const tableOpen=n=>teacher||n===1||done(n-1)>=4;
-const levelOpen=(n,l)=>teacher||done(n)>=l-1;
+const tableOpen=n=>n===1||done(n-1)>=4;
+const levelOpen=(n,l)=>done(n)>=l-1;
 
 const LV=[
  {i:"🧺",name:"ابنِ المجموعات",tip:"الضرب جمع متكرّر"},
@@ -207,11 +206,10 @@ const PRAISE=["أحسنت! 🌟","رائع! 👏","ممتاز! 🎉","بطل! �
 /* ========== HOME ========== */
 function home(){
   $("#app").innerHTML=`<header class="hero"><div><h1>مغامرة جدول الضرب</h1><p>ابنِ، اقفز، رتّب… وتعلّم أن الضرب جمع متكرّر! أكمل كلّ مستوى لتفتح الذي بعده.</p></div><div class="big">2 × 3 = 3 + 3</div></header>
-   <div class="tools"><button class="tbtn ${teacher?"on":""}" id="teach">${teacher?"🔓 وضع المعلم مفعّل":"🔒 وضع المعلم"}</button><button class="tbtn" id="reset">↺ ابدأ من جديد</button></div>
+   <div class="tools"><button class="tbtn" id="reset">↺ ابدأ من جديد</button></div>
    <div class="islands">${Array.from({length:10},(_,i)=>{const n=i+1,op=tableOpen(n),d=done(n);
     return `<button class="isl ${op?"":"locked"}" style="--c:${COL[i]}" data-n="${n}" ${op?"":'aria-disabled="true"'}>${!op?'<span class="lk">🔒</span>':d>=4?'<span class="dn">✅</span>':""}<span class="ic">${ICON[i]}</span><span class="nm">جدول ${m(n)}</span><span class="lv">${[1,2,3,4].map(l=>`<i class="${d>=l?"ok":""}"></i>`).join("")}</span></button>`;}).join("")}</div>`;
   $$(".isl").forEach(b=>b.onclick=()=>{const n=+b.dataset.n;if(!tableOpen(n)){S.bad();toast(`أكمل جدول ${n-1} أولًا 🔒`,"bad");shake(b);return;}tableScreen(n);});
-  $("#teach").onclick=async()=>{if(teacher){teacher=false;home();return;}if(await ask("تفعيل وضع المعلم يفتح كلّ الجداول والمستويات مؤقتًا. هل تريد المتابعة؟")){teacher=true;home();}};
   $("#reset").onclick=async()=>{if(await ask("هل تريد مسح التقدّم والبدء من جدول 1؟")){P={};save();home();}};
   scrollTo(0,0);
 }
